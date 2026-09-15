@@ -56,15 +56,15 @@ the browser cannot reach `127.0.0.1`. Modaya signs browser-facing object-storage
 
 Three pieces, deployed separately:
 
-1. **App** — Vercel (or Fly/Railway). Set `DATABASE_URL` (Neon pooled), `SESSION_SECRET`,
-   `APP_URL`, and the `S3_*` variables pointing at your R2 bucket.
+1. **App** — Vercel (or Fly/Railway). Set `DATABASE_URL` (Neon pooled), `APP_URL`, and the
+   `S3_*` variables pointing at your R2 bucket.
 2. **Worker** — `npm run worker` on a host that has ffmpeg (Fly/Railway container). ffmpeg is
    resolved from `@ffmpeg-installer/ffmpeg`, so a plain Node image is enough. Serverless hosts are
    not suitable: renders are long-running processes.
 3. **Database** — Neon Postgres. Run `npm run db:migrate` as a deploy step.
 
-Environment variables are documented in `.env.example`. Generate `SESSION_SECRET` with
-`openssl rand -hex 32`.
+Environment variables are documented in `.env.example`. There is no session signing key: session
+tokens are random 256-bit values and only their SHA-256 hash is stored, so there is nothing to sign.
 
 ### Deploying the app on Vercel
 
@@ -78,7 +78,6 @@ Set these in Project → Settings → Environment Variables (Production and Prev
 | Variable | Value |
 | --- | --- |
 | `DATABASE_URL` | Neon/Supabase **pooled** connection string |
-| `SESSION_SECRET` | `openssl rand -hex 32`. Required: the app throws in production without it |
 | `APP_URL` | the deployed origin, e.g. `https://modaya.vercel.app` |
 | `S3_ENDPOINT`, `S3_REGION`, `S3_BUCKET`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_FORCE_PATH_STYLE` | your R2 bucket |
 | `S3_PUBLIC_ENDPOINT` | optional; the browser-facing storage origin |

@@ -27,14 +27,14 @@ export function databaseUrl(): string {
   return opt('DATABASE_URL', DEV_DATABASE_URL);
 }
 
-export function sessionSecret(): string {
-  const secret = opt('SESSION_SECRET');
-  if (secret) return secret;
-  if (process.env.NODE_ENV === 'production') {
-    throw new Error('SESSION_SECRET is required in production');
-  }
-  return 'dev-only-insecure-session-secret-do-not-use-in-production';
-}
+/*
+ * There is deliberately no session signing key here. A session token is 32 bytes
+ * of CSPRNG output and only its SHA-256 hash is stored, so possession of the
+ * token *is* the credential — there is nothing to sign and no secret to rotate.
+ * (A previous `sessionSecret()` threw in production claiming to be required; it
+ * was never called. Verified: production mode signs up and authenticates with
+ * the variable unset.)
+ */
 
 export function appUrl(): string {
   return opt('APP_URL', 'http://localhost:3000');
