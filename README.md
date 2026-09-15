@@ -66,6 +66,32 @@ Three pieces, deployed separately:
 Environment variables are documented in `.env.example`. Generate `SESSION_SECRET` with
 `openssl rand -hex 32`.
 
+### Deploying the app on Vercel
+
+Vercel builds the repo root, so the app must be on the branch the project treats as production.
+The default production branch is `main`: if the work lives on another branch, Vercel builds a
+repository with no `package.json` in it and every URL returns Vercel's platform 404. Point the
+project at the branch that has the app, or merge it into `main` first.
+
+Set these in Project → Settings → Environment Variables (Production and Preview):
+
+| Variable | Value |
+| --- | --- |
+| `DATABASE_URL` | Neon/Supabase **pooled** connection string |
+| `SESSION_SECRET` | `openssl rand -hex 32`. Required: the app throws in production without it |
+| `APP_URL` | the deployed origin, e.g. `https://modaya.vercel.app` |
+| `S3_ENDPOINT`, `S3_REGION`, `S3_BUCKET`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_FORCE_PATH_STYLE` | your R2 bucket |
+| `S3_PUBLIC_ENDPOINT` | optional; the browser-facing storage origin |
+| `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` | optional; without one, the model layer reports itself unavailable rather than guessing |
+
+`next build` succeeds with none of these set — no page touches the database at build time — so a
+misconfigured first deploy shows a running app with failing queries, not a failed build.
+
+The app does not import ffmpeg, so no function bundle carries the binary. **The worker is not a
+Vercel workload.** Vercel has no long-lived processes, and a render is one: run `npm run worker` on
+Fly/Railway/Render or a small VM, pointed at the same `DATABASE_URL`. Uploads then queue normally and
+the web app shows each job as pending until the worker claims it.
+
 ### Cloudflare R2 bucket CORS
 
 Direct-to-bucket uploads need a CORS rule on the bucket:

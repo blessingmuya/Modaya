@@ -7,11 +7,20 @@ import { Pipeline } from '@/components/landing/pipeline';
 import { SiteFooter } from '@/components/landing/site-footer';
 
 export default async function LandingPage() {
-  const user = await getCurrentUser();
+  // The front page must render even when Postgres is unreachable: a visitor with
+  // a stale session cookie is enough to trigger a lookup, and a database blip
+  // should not take the marketing page down with it. Signed-out is the safe
+  // default — it only changes which button the header shows.
+  let signedIn = false;
+  try {
+    signedIn = Boolean(await getCurrentUser());
+  } catch {
+    signedIn = false;
+  }
 
   return (
     <div className="min-h-screen">
-      <SiteHeader signedIn={Boolean(user)} />
+      <SiteHeader signedIn={signedIn} />
       <main>
         <Hero />
         <HowItWorks />
