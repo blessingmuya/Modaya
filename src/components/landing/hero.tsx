@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 /**
  * Hero: an eyebrow line, a two-line display headline (grotesque, then a serif
@@ -11,35 +11,44 @@ import Link from 'next/link';
 export function Hero() {
   return (
     <section className="grain relative overflow-hidden">
-      <div aria-hidden className="atmosphere pointer-events-none absolute inset-0" />
+      <div
+        aria-hidden
+        className="atmosphere pointer-events-none absolute inset-0"
+      />
       <div
         aria-hidden
         className="grid-dots pointer-events-none absolute inset-x-0 top-0 h-[30rem] opacity-50 [mask-image:radial-gradient(58%_60%_at_50%_0%,#000_0%,transparent_76%)]"
       />
 
       <div className="container-page relative pt-14 pb-2 text-center sm:pt-20">
-        <p className="mx-auto inline-flex items-center gap-2.5 rounded-full border border-line bg-surface/70 px-3.5 py-1.5 text-[12.5px] text-muted backdrop-blur">
+        <p className="mx-auto inline-flex items-center gap-2.5 text-[13px]">
           <span
             aria-hidden
-            className="inline-block h-2.5 w-2.5 rounded-[2px] bg-accent"
+            className="inline-block h-2.5 w-2.5 rotate-45 rounded-[2px] bg-accent"
           />
-          <span className="font-medium text-ink-soft">Measured, not vibes</span>
-          <span className="text-line-strong" aria-hidden>
+          <span className="font-semibold text-ink">Measured, not vibes</span>
+          <span className="text-faint" aria-hidden>
             —
           </span>
-          <span>every cut traces to a number</span>
+          <span className="text-muted">every cut traces to a number</span>
         </p>
 
-        <h1 className="mx-auto mt-8 max-w-3xl text-[2.75rem] leading-[0.98] font-bold tracking-[-0.035em] text-ink sm:text-[3.9rem] lg:text-[4.6rem]">
-          Edit to the reference&rsquo;s rhythm
-          <span className="display-accent mt-1 block text-[3.1rem] font-normal tracking-[-0.01em] text-ink-soft sm:text-[4.4rem] lg:text-[5.2rem]">
+        {/* Two explicit lines, the way the reference sets it: bold grotesque on
+            the first, a larger serif italic on the second. Sizes are chosen so
+            each line fits on ONE line at desktop instead of wrapping in half. */}
+        <h1 className="mx-auto mt-8 max-w-5xl text-ink">
+          <span className="block text-[2rem] leading-[1.02] font-bold tracking-[-0.035em] sm:text-[2.6rem] md:text-[3rem] lg:text-[3.3rem]">
+            Edit to the reference&rsquo;s rhythm
+          </span>
+          <span className="display-accent mt-2 block text-[2.2rem] leading-[1.04] tracking-[-0.01em] sm:text-[2.9rem] md:text-[3.4rem] lg:text-[3.85rem]">
             with a receipt for every cut
           </span>
         </h1>
 
         <p className="mx-auto mt-7 max-w-[34rem] text-[15.5px] leading-relaxed text-muted">
-          Drop your footage, point Modaya at a reference, and ask for the edit. It measures the
-          reference&rsquo;s cut rhythm, shot lengths and grade, then renders a real MP4 on the server.
+          Drop your footage, point Modaya at a reference, and ask for the edit.
+          It measures the reference&rsquo;s cut rhythm, shot lengths and grade,
+          then renders a real MP4 on the server.
         </p>
 
         <div className="mt-9 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
@@ -92,51 +101,56 @@ type Card = {
 function HeroCards() {
   const cards: Card[] = [
     {
-      src: '/media/hero-1.mp4',
-      poster: '/media/hero-1.jpg',
-      alt: 'Rendered clip: a woman at a cafe window',
-      title: 'Measured',
-      subtitle: 'cut rhythm, shot lengths',
-      panel: 'from-[#2dd4b0] to-[#1c9c81]',
-      transform: 'lg:-rotate-[9deg] lg:translate-y-10',
-      z: 'lg:z-10',
+      src: "/media/hero-1.mp4",
+      poster: "/media/hero-1.jpg",
+      alt: "Rendered clip: a woman at a cafe window",
+      title: "Measured",
+      subtitle: "cut rhythm, shot lengths",
+      panel: "from-[#2dd4b0] to-[#1c9c81]",
+      transform: "z-10 -rotate-[7deg] lg:-rotate-[9deg] lg:translate-y-8",
+      z: "",
     },
     {
-      src: '/media/hero-2.mp4',
-      poster: '/media/hero-2.jpg',
-      alt: 'Rendered clip with a punch-in applied: a man on a street at golden hour',
-      title: 'Punch-in',
-      subtitle: 'framing that follows the beat',
-      panel: 'from-[#7c6cf0] to-[#4b3fc4]',
-      transform: 'lg:-translate-y-2 lg:scale-[1.08]',
-      z: 'lg:z-30',
+      src: "/media/hero-2.mp4",
+      poster: "/media/hero-2.jpg",
+      alt: "Rendered clip with a punch-in applied: a man on a street at golden hour",
+      title: "Punch-in",
+      subtitle: "framing that follows the beat",
+      panel: "from-[#7c6cf0] to-[#4b3fc4]",
+      transform: "z-30 lg:scale-[1.1]",
+      z: "",
     },
     {
-      src: '/media/hero-3.mp4',
-      poster: '/media/hero-3.jpg',
-      alt: 'Rendered clip: hands arranging packaged goods',
-      title: 'Export',
-      subtitle: 'a real MP4, server-rendered',
-      panel: 'from-[#f0736c] to-[#c9403a]',
-      transform: 'lg:rotate-[9deg] lg:translate-y-10',
-      z: 'lg:z-20',
+      src: "/media/hero-3.mp4",
+      poster: "/media/hero-3.jpg",
+      alt: "Rendered clip: hands arranging packaged goods",
+      title: "Export",
+      subtitle: "a real MP4, server-rendered",
+      panel: "from-[#f0736c] to-[#c9403a]",
+      transform: "z-20 rotate-[7deg] lg:rotate-[9deg] lg:translate-y-8",
+      z: "",
     },
   ];
 
   return (
     <div className="relative pb-0">
       <div className="container-page">
-        <div className="flex items-end justify-center gap-3 sm:gap-5 lg:gap-6">
+        {/* A fan, not a row: the cards overlap, and the centre one sits in front
+            and slightly larger. Negative margins do the overlap so there is never
+            a wedge of empty background between them. */}
+        <div className="flex items-center justify-center">
           {cards.map((card) => (
             <div
               key={card.src}
-              className={`relative min-w-0 w-full max-w-[290px] flex-1 ${card.transform} ${card.z}`}
+              className={`relative min-w-0 w-full max-w-[330px] flex-1 first:-mr-3 last:-ml-3 sm:first:-mr-8 sm:last:-ml-8 lg:first:-mr-12 lg:last:-ml-12 ${card.transform}`}
             >
               <div
                 className={`overflow-hidden rounded-[26px] bg-gradient-to-b p-3 shadow-[var(--shadow-card-lift)] ring-1 ring-white/10 ${card.panel}`}
               >
                 <div className="px-1 pb-3">
-                  <p className="text-[15px] font-semibold text-black/85">{card.title}</p>
+                  <p className="text-[15px] font-semibold text-black/85">
+                    {card.title}
+                  </p>
                   <p className="text-[12px] text-black/60">{card.subtitle}</p>
                 </div>
                 <div className="relative overflow-hidden rounded-[16px] bg-base-950 ring-1 ring-black/25">
@@ -170,8 +184,8 @@ function HeroCards() {
       </div>
 
       <p className="container-page mt-14 text-center text-[12.5px] text-faint">
-        These frames are exports from Modaya&rsquo;s own renderer, not a mockup — the middle card has
-        a punch-in applied.
+        These frames are exports from Modaya&rsquo;s own renderer, not a mockup
+        — the middle card has a punch-in applied.
       </p>
     </div>
   );

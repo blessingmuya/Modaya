@@ -158,3 +158,65 @@ test('no component references a colour token that does not exist', () => {
 
   assert.deepEqual([...dangling], [], `classes with no matching --color-* token:\n${[...dangling].join('\n')}`);
 });
+
+/**
+ * The same silent failure applies to component classes, and it bit once: a class
+ * was renamed from `.display` to `.display-accent`, and five call sites kept
+ * using `.display`. Nothing failed — the wordmark and every section heading just
+ * fell back to the body font. Class names are not type-checked, so they are
+ * checked here.
+ *
+ * Only class names in our own namespaces are asserted, so Tailwind utilities and
+ * unrelated names never trip it.
+ */
+test('no component uses a custom class that is not defined', () => {
+  const defined = new Set(
+    [...css.matchAll(/^\s{2}\.([a-z][a-z0-9-]*)/gm)].map((match) => match[1]),
+  );
+  assert.ok(defined.has('btn'), 'expected to parse component classes out of globals.css');
+
+  // Our own class namespaces. A token starting with one of these is ours, so it
+  // must be defined somewhere in the stylesheet.
+  const OWNED = [
+    'btn',
+    'chip',
+    'nav',
+    'card',
+    'float-card',
+    'display',
+    'atmosphere',
+    'grid-dots',
+    'grain',
+    'hairline',
+    'mono',
+    'container-page',
+    'input',
+    'label',
+  ];
+  // Bare names that are legitimate without a definition: `nav` is only ever an
+  // element here, and the rest are defined. `display` is deliberately NOT in this
+  // list — it is the name that broke, and catching it is the point of the test.
+  const ALLOWED = new Set(['nav', 'card', 'label', 'input', 'btn']);
+
+  const dangling = new Set<string>();
+  for (const file of readdirSync(srcDir, { recursive: true, encoding: 'utf8' })) {
+    if (!file.endsWith('.tsx')) continue;
+    const contents = readFileSync(join(srcDir, file), 'utf8');
+    for (const match of contents.matchAll(/className=(?:"([^"]*)"|\{`([^`]*)`\})/g)) {
+      const raw = match[1] ?? match[2] ?? '';
+      for (const token of raw.split(/[\s`${}]+/)) {
+        if (!token || token.includes(':') || token.includes('=')) continue;
+        const root = OWNED.find((name) => token === name || token.startsWith(`${name}-`));
+        if (!root) continue;
+        if (ALLOWED.has(token) || defined.has(token)) continue;
+        dangling.add(`${token} (used in src/${file})`);
+      }
+    }
+  }
+
+  assert.deepEqual(
+    [...dangling],
+    [],
+    `classes that are neither defined in globals.css nor Tailwind utilities:\n${[...dangling].join('\n')}`,
+  );
+});

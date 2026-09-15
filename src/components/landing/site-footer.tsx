@@ -16,7 +16,7 @@ export function SiteFooter() {
             }}
           />
           <div className="relative">
-            <h2 className="display mx-auto max-w-2xl text-[2rem] text-white sm:text-[2.6rem]">
+            <h2 className="mx-auto max-w-2xl text-[1.85rem] font-bold tracking-[-0.03em] text-white sm:text-[2.4rem]">
               Bring a clip and a reference.
             </h2>
             <p className="mx-auto mt-3 max-w-md text-[14.5px] leading-relaxed text-white/60">

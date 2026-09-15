@@ -17,7 +17,7 @@ export function Honesty() {
     <section id="honesty" className="border-t border-line/70 py-20">
       <div className="container-page">
         <span className="chip">The part most tools skip</span>
-        <h2 className="display mt-5 max-w-3xl text-[2rem] text-ink sm:text-[2.6rem]">
+        <h2 className="mt-5 max-w-3xl text-[1.85rem] font-bold tracking-[-0.03em] text-ink sm:text-[2.4rem]">
           Two layers, labelled by where they came from
         </h2>
         <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-ink-soft">

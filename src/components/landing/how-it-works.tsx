@@ -23,7 +23,7 @@ export function HowItWorks() {
   return (
     <section id="how" className="border-t border-line/70 py-20">
       <div className="container-page">
-        <h2 className="display text-[2rem] text-ink sm:text-[2.6rem]">
+        <h2 className="text-[1.85rem] font-bold tracking-[-0.03em] text-ink sm:text-[2.4rem]">
           Three steps, none of them a mockup
         </h2>
         <p className="mt-3 max-w-2xl text-[15px] text-muted">
