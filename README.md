@@ -92,6 +92,26 @@ Vercel workload.** Vercel has no long-lived processes, and a render is one: run 
 Fly/Railway/Render or a small VM, pointed at the same `DATABASE_URL`. Uploads then queue normally and
 the web app shows each job as pending until the worker claims it.
 
+### Commit authorship (Vercel)
+
+Vercel refuses to deploy a commit whose author email it cannot match to a GitHub account:
+
+> The deployment was blocked because the commit email `someone@example.com` could not be matched to
+> a GitHub account.
+
+So every commit on a deployed branch must be authored by an email GitHub knows. The reliable choice
+is GitHub's own noreply form, which needs no email to be made public:
+
+```bash
+git config user.name  "your-github-login"
+git config user.email "<your-github-user-id>+<your-github-login>@users.noreply.github.com"
+```
+
+Both parts are in `https://api.github.com/users/<login>` (`id` and `login`). GitHub rewrites no
+emails, so a made-up address like `agent@example.com` will block every deploy even though the code
+is fine — and the failure happens after the build is queued, which makes it look like an app
+problem when it is not.
+
 ### Cloudflare R2 bucket CORS
 
 Direct-to-bucket uploads need a CORS rule on the bucket:
