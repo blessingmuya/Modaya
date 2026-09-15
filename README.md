@@ -94,6 +94,24 @@ Direct-to-bucket uploads need a CORS rule on the bucket:
   output bytes. `tests/render.test.mjs` asserts this.
 - Style matching is stated in terms of what it measures. See "Style profile" below.
 
+**Render pipeline (Phase 1)**
+
+Upload → object storage → probe job → timeline spec → render job → object storage →
+signed download URL. Specifically:
+
+- Uploads go browser → bucket with a presigned PUT. On completion the app HEADs the object to
+  confirm it exists, then queues a `probe_media` job. ffprobe never runs on the request path.
+- A timeline is an ordered list of `{assetId, inSec, outSec}` clips. Every edit is a pure
+  function over that list (`src/lib/timeline/ops.ts`), so cut/trim/concat are testable without
+  ffmpeg and always produce the same spec for the same edit.
+- `planRender` resolves a spec against source metadata into a fully determined plan; from there
+  the ffmpeg argument vector is a pure function of the plan. Fixed encoder settings, no source
+  metadata, bitexact flags. `tests/render.test.ts` asserts two runs produce byte-identical files.
+- Renders run in a separate worker process that claims rows from `jobs` with
+  `SELECT … FOR UPDATE SKIP LOCKED`, reports real encoder progress from ffmpeg's `-progress`
+  stream, retries transient failures up to 3 attempts, and requeues jobs whose worker died.
+- Exports land in object storage and are handed to the browser as signed URLs.
+
 **Style profile: measured vs model-described**
 
 A `StyleProfile` has two layers that are never merged:
@@ -113,7 +131,7 @@ If no model key is configured, the UI says the layer is unavailable instead of i
 | Phase | Scope | State |
 | --- | --- | --- |
 | 0 | Foundation: auth, Postgres, object storage, landing page, dashboard | done |
-| 1 | Real render + export pipeline (upload → ffmpeg → MP4 download) | in progress |
+| 1 | Real render + export pipeline (upload → ffmpeg → MP4 download) | done |
 | 2 | Reference style engine (measured + model-described) | not started |
 | 3 | AI edit ops (chat-driven editing) | not started |
 | 4 | Studio UX | not started |

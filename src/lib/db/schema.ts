@@ -5,6 +5,7 @@ import {
   uuid,
   integer,
   bigint,
+  doublePrecision,
   jsonb,
   index,
   uniqueIndex,
@@ -78,10 +79,10 @@ export const mediaAssets = pgTable(
     filename: text('filename').notNull(),
     contentType: text('content_type').notNull(),
     sizeBytes: bigint('size_bytes', { mode: 'number' }).notNull().default(0),
-    durationSec: text('duration_sec'),
+    durationSec: doublePrecision('duration_sec'),
     width: integer('width'),
     height: integer('height'),
-    fps: text('fps'),
+    fps: doublePrecision('fps'),
     status: text('status').notNull().default('pending'),
     probeJson: jsonb('probe_json'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
@@ -92,6 +93,65 @@ export const mediaAssets = pgTable(
   }),
 );
 
+/**
+ * Timelines are versioned rather than overwritten: an export can always be
+ * traced back to the exact spec that produced it.
+ */
+export const timelineVersions = pgTable(
+  'timeline_versions',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    projectId: uuid('project_id')
+      .notNull()
+      .references(() => projects.id, { onDelete: 'cascade' }),
+    version: integer('version').notNull(),
+    spec: jsonb('spec').notNull(),
+    /** manual | initial | chat | plan */
+    source: text('source').notNull().default('manual'),
+    note: text('note'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    projectVersionUnique: uniqueIndex('timeline_versions_project_version_unique').on(
+      t.projectId,
+      t.version,
+    ),
+  }),
+);
+
+/**
+ * The job queue. Workers claim rows with SELECT … FOR UPDATE SKIP LOCKED, so
+ * several worker processes can run against the same table without Redis.
+ */
+export const jobs = pgTable(
+  'jobs',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    projectId: uuid('project_id')
+      .notNull()
+      .references(() => projects.id, { onDelete: 'cascade' }),
+    /** probe_media | render_export */
+    type: text('type').notNull(),
+    /** queued | running | succeeded | failed */
+    status: text('status').notNull().default('queued'),
+    payload: jsonb('payload').notNull(),
+    result: jsonb('result'),
+    error: text('error'),
+    progress: integer('progress').notNull().default(0),
+    attempts: integer('attempts').notNull().default(0),
+    lockedAt: timestamp('locked_at', { withTimezone: true }),
+    startedAt: timestamp('started_at', { withTimezone: true }),
+    finishedAt: timestamp('finished_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    statusIdx: index('jobs_status_idx').on(t.status, t.createdAt),
+    projectIdx: index('jobs_project_idx').on(t.projectId, t.createdAt),
+  }),
+);
+
 export type User = typeof users.$inferSelect;
 export type Project = typeof projects.$inferSelect;
 export type MediaAsset = typeof mediaAssets.$inferSelect;
+export type Job = typeof jobs.$inferSelect;
+export type TimelineVersion = typeof timelineVersions.$inferSelect;

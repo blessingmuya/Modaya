@@ -3,6 +3,7 @@ import { getCurrentUser } from '@/lib/auth/session';
 import { getDb } from '@/lib/db/client';
 import { mediaAssets } from '@/lib/db/schema';
 import { jsonError, jsonOk } from '@/lib/http';
+import { enqueueJob } from '@/lib/jobs/queue';
 import { assetForUser } from '@/lib/media/access';
 import { headObject } from '@/lib/storage/s3';
 
@@ -36,9 +37,13 @@ export async function POST(_req: Request, ctx: { params: Promise<{ id: string }>
 
   const [updated] = await getDb()
     .update(mediaAssets)
-    .set({ sizeBytes: size, contentType, status: 'ready' })
+    .set({ sizeBytes: size, contentType, status: 'uploaded' })
     .where(eq(mediaAssets.id, asset.id))
     .returning();
 
-  return jsonOk({ asset: updated });
+  // Inspecting the file is a worker job, not a request-time operation: probing a
+  // large upload on the request path would just move the wait into the browser.
+  const job = await enqueueJob(asset.projectId, 'probe_media', { assetId: asset.id });
+
+  return jsonOk({ asset: updated, jobId: job.id });
 }
