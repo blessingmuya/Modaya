@@ -46,9 +46,7 @@ export function Wordmark({ href = "/" }: { href?: string }) {
   return (
     <a href={href} className="flex items-center gap-2.5 no-underline">
       <LogoMark />
-      <span className="text-[15.5px] font-semibold tracking-tight text-ink">
-        Modaya
-      </span>
+      <span className="display text-[23px] text-ink">Modaya</span>
     </a>
   );
 }

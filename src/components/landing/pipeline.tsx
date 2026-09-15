@@ -30,7 +30,7 @@ export function Pipeline() {
   return (
     <section id="pipeline" className="border-t border-line/70 py-20">
       <div className="container-page">
-        <h2 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+        <h2 className="display text-[2rem] text-ink sm:text-[2.6rem]">
           No browser-only render path
         </h2>
         <p className="mt-3 max-w-2xl text-[15px] text-muted">

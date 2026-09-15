@@ -142,11 +142,19 @@ its missing fields as “—” with a re-analyze prompt, never as a plausible-l
 
 ## Design tokens
 
-The visual direction is a light canvas with one saturated accent. Every colour lives in the `@theme`
-block of `src/app/globals.css`; components reference semantic classes (`bg-surface`, `text-muted`,
-`border-line`) rather than hex values, so the whole app follows from that one file. Mint stays the
-accent — the surfaces, hairlines and text tiers were re-tuned for light backgrounds rather than the
-accent being replaced.
+The visual direction is editorial: a warm near-white canvas, a display serif for headlines, and one
+saturated accent. Every colour lives in the `@theme` block of `src/app/globals.css`; components
+reference semantic classes (`bg-surface`, `text-muted`, `border-line`) rather than hex values, so the
+whole app follows from that one file. Mint stays the accent — the surfaces, hairlines and text tiers
+are re-tuned rather than the accent being replaced, and re-solving them for a new canvas is a
+five-value change.
+
+Typography: Instrument Serif for display only, self-hosted through `@fontsource` rather than a
+runtime font CDN, so the page has no third-party dependency at load.
+
+The landing hero plays real clips: `var/` is scratch space, so
+`public/media/hero-*.mp4` are exports produced by this project's own `planRender` +
+`buildRenderArgs` (the middle one has a punch-in applied), downscaled to 720x1280 for the web.
 
 Light backgrounds make contrast a real constraint rather than a detail. `tests/contrast.test.ts`
 parses the token block and asserts WCAG AA (4.5:1) for each text/background pair the UI renders. It

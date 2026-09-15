@@ -2,9 +2,8 @@ import type { ReactNode } from "react";
 import { Wordmark } from "@/components/brand";
 
 /**
- * Floating frosted header for the signed-in surfaces, matching the landing page.
- * One component instead of a header hand-rolled per page, so the app shell cannot
- * drift from the marketing surface.
+ * Header for the signed-in surfaces. Same flat editorial treatment as the landing
+ * page, in one component so the app shell cannot drift from the marketing page.
  *
  * `children` are the right-hand controls — the caller supplies them, because the
  * dashboard shows account controls and the studio shows a way back to the list.
@@ -17,9 +16,9 @@ export function AppHeader({
   children?: ReactNode;
 }) {
   return (
-    <header className="sticky top-4 z-40">
+    <header className="sticky top-0 z-40 bg-canvas/85 backdrop-blur-md">
       <div className="container-page">
-        <div className="nav-shell justify-between gap-4 py-2 pr-2 pl-3">
+        <div className="flex h-[72px] items-center justify-between gap-4">
           <div className="flex min-w-0 items-center gap-2.5">
             <Wordmark href="/dashboard" />
             {crumb ? (
@@ -27,13 +26,11 @@ export function AppHeader({
                 <span className="text-line-strong" aria-hidden>
                   /
                 </span>
-                <span className="truncate text-[13.5px] text-muted">
-                  {crumb}
-                </span>
+                <span className="truncate text-[14px] text-muted">{crumb}</span>
               </>
             ) : null}
           </div>
-          <div className="flex shrink-0 items-center gap-2">{children}</div>
+          <div className="flex shrink-0 items-center gap-3">{children}</div>
         </div>
       </div>
     </header>

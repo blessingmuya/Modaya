@@ -12,11 +12,11 @@ export function SiteFooter() {
             className="pointer-events-none absolute inset-0 opacity-70"
             style={{
               backgroundImage:
-                "radial-gradient(40% 70% at 20% 0%, rgba(45,212,176,0.28) 0%, rgba(10,14,26,0) 70%), radial-gradient(40% 70% at 85% 100%, rgba(129,140,248,0.22) 0%, rgba(10,14,26,0) 70%)",
+                "radial-gradient(40% 70% at 20% 0%, rgba(45,212,176,0.22) 0%, rgba(17,18,20,0) 70%), radial-gradient(40% 70% at 85% 100%, rgba(255,255,255,0.06) 0%, rgba(17,18,20,0) 70%)",
             }}
           />
           <div className="relative">
-            <h2 className="mx-auto max-w-2xl text-2xl font-semibold tracking-[-0.02em] text-white sm:text-[2rem]">
+            <h2 className="display mx-auto max-w-2xl text-[2rem] text-white sm:text-[2.6rem]">
               Bring a clip and a reference.
             </h2>
             <p className="mx-auto mt-3 max-w-md text-[14.5px] leading-relaxed text-white/60">

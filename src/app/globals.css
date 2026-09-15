@@ -17,36 +17,36 @@
  */
 @theme {
   /* Canvas — the page itself. */
-  --color-canvas: #f7f8fc;
+  --color-canvas: #f1f1ef;
   --color-canvas-2: #ffffff;
 
   /* Surfaces. `surface` is cards; the numbered steps are insets inside a card. */
   --color-surface: #ffffff;
-  --color-surface-2: #f2f4f9;
-  --color-surface-3: #e7eaf2;
+  --color-surface-2: #f6f6f4;
+  --color-surface-3: #eaeae7;
 
   /* Deepest ink in the system. Used for text that sits on the accent fill and
      for hard dividers — not as a page background. */
-  --color-base-950: #0a0e1a;
-  --color-base-900: #f1f3f9;
+  --color-base-950: #111214;
+  --color-base-900: #f6f6f4;
 
   /* Hairlines */
-  --color-line: #e4e7f0;
-  --color-line-strong: #ccd2e1;
+  --color-line: #e4e4e1;
+  --color-line-strong: #cbcbc7;
 
   /* Text */
-  --color-ink: #0f1424;
-  --color-ink-soft: #333c56;
+  --color-ink: #14161a;
+  --color-ink-soft: #33363d;
   /* Text tiers. On a light canvas a fourth tier cannot reach AA and stay
      visually distinct from the third — the first attempt at #949cb5 measured
      2.6:1 and #656e8e landed 1.007x from muted, i.e. indistinguishable. So the
      ladder is three real tiers with measured separation: 1.60x and 1.37x. */
-  --color-muted: #525a74;
-  --color-faint: #6a6f81;
+  --color-muted: #54585f;
+  --color-faint: #686d74;
 
   /* Mint accent, re-tuned for a light canvas. */
   --color-mint-700: #0a7a65;
-  --color-mint-600: #0c8169;
+  --color-mint-600: #0c7c65;
   --color-mint-500: #16b394;
   --color-mint-400: #2dd4b0;
   --color-mint-300: #8fedda;
@@ -55,22 +55,27 @@
   --color-mint-950: #05372c;
 
   /* Semantic. Both are dark enough to read as text on a light surface. */
-  --color-warn-400: #9a6417;
+  --color-warn-400: #966116;
   --color-warn-100: #fdf3e0;
-  --color-danger-400: #be433e;
+  --color-danger-400: #bd433e;
   --color-danger-100: #fdecea;
 
   --radius-card: 18px;
   --radius-pill: 999px;
 
   /* Soft, diffuse shadows. Floating surfaces need depth without a hard edge. */
-  --shadow-card: 0 1px 2px rgb(15 20 36 / 0.04), 0 8px 24px -12px rgb(15 20 36 / 0.1);
-  --shadow-float: 0 2px 4px rgb(15 20 36 / 0.04), 0 18px 40px -16px rgb(15 20 36 / 0.16);
-  --shadow-lift: 0 4px 8px rgb(15 20 36 / 0.05), 0 32px 64px -24px rgb(15 20 36 / 0.22);
-  --shadow-pill: 0 1px 2px rgb(15 20 36 / 0.05), 0 8px 24px -10px rgb(15 20 36 / 0.14);
+  --shadow-card: 0 1px 2px rgb(20 22 26 / 0.04), 0 8px 24px -12px rgb(20 22 26 / 0.1);
+  --shadow-float: 0 2px 6px rgb(20 22 26 / 0.05), 0 20px 44px -18px rgb(20 22 26 / 0.2);
+  --shadow-lift: 0 6px 12px rgb(20 22 26 / 0.06), 0 40px 72px -28px rgb(20 22 26 / 0.28);
+  --shadow-pill: 0 1px 2px rgb(20 22 26 / 0.05), 0 8px 24px -10px rgb(20 22 26 / 0.16);
+  /* The tilted hero cards sit on this: wide, soft, low contrast. */
+  --shadow-card-lift: 0 2px 8px rgb(20 22 26 / 0.06), 0 36px 60px -20px rgb(20 22 26 / 0.3);
 
   --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
     Arial, sans-serif;
+  /* Display serif for headlines only. Self-hosted via @fontsource: the page must
+     not depend on a third-party font CDN at runtime. */
+  --font-display: 'Instrument Serif', ui-serif, Georgia, 'Times New Roman', serif;
   --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', monospace;
 }
 
@@ -262,20 +267,32 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* Editorial headline: serif, tight leading, italic words carrying emphasis. */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.06;
+  }
+
   /* ------------------------------------------------------------ atmosphere */
 
-  /* Soft coloured washes that sit behind a hero. Decorative only. */
+  /* Soft diagonal light streaks, the way light falls across a wall.
+     Decorative only. */
   .atmosphere {
-    background-image:
-      radial-gradient(48% 42% at 18% 8%, rgb(45 212 176 / 0.22) 0%, rgb(247 248 252 / 0) 68%),
-      radial-gradient(42% 38% at 82% 4%, rgb(129 140 248 / 0.2) 0%, rgb(247 248 252 / 0) 66%),
-      radial-gradient(60% 44% at 50% 96%, rgb(45 212 176 / 0.12) 0%, rgb(247 248 252 / 0) 70%);
+    background-image: repeating-linear-gradient(
+      104deg,
+      rgb(255 255 255 / 0.9) 0px,
+      rgb(255 255 255 / 0.9) 3px,
+      rgb(255 255 255 / 0) 3px,
+      rgb(255 255 255 / 0) 54px
+    );
   }
 
   /* Faint dotted field, as in the quso reference. Decorative only. */
   .grid-dots {
-    background-image: radial-gradient(rgb(15 20 36 / 0.14) 1px, transparent 1px);
-    background-size: 22px 22px;
+    background-image: radial-gradient(rgb(20 22 26 / 0.1) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
 
   /* A floating panel. Depth without a hard border. */

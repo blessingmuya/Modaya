@@ -1,5 +1,9 @@
 import type { Metadata } from 'next';
 import './globals.css';
+// Self-hosted display serif (roman + italic). Instrument Serif ships these two
+// cuts; the italic is a real drawn italic, which is what the headline leans on.
+import '@fontsource/instrument-serif/latin-400.css';
+import '@fontsource/instrument-serif/latin-400-italic.css';
 
 export const metadata: Metadata = {
   title: 'Modaya — edit video by describing the result',

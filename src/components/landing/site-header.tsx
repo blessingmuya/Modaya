@@ -2,43 +2,52 @@ import Link from "next/link";
 import { Wordmark } from "@/components/brand";
 
 /**
- * Floating frosted pill navigation, as in the reference direction: wordmark on
- * the left, links in a centred pill, a single CTA on the right.
+ * Flat editorial header: wordmark, inline section links, one solid CTA.
  *
  * Every link here resolves to a real anchor or route — nothing is decorative.
  */
 export function SiteHeader({ signedIn }: { signedIn: boolean }) {
   return (
-    <header className="sticky top-4 z-40">
+    <header className="sticky top-0 z-40 bg-canvas/85 backdrop-blur-md">
       <div className="container-page">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3 pl-1">
-            <Wordmark />
-          </div>
+        <div className="flex h-[76px] items-center justify-between gap-6">
+          <Wordmark />
 
           <nav
-            className="nav-shell hidden px-2 py-1.5 md:flex"
+            className="hidden items-center gap-9 md:flex"
             aria-label="Sections"
           >
-            <a href="#how" className="nav-link">
+            <a
+              href="#how"
+              className="text-[14.5px] text-ink-soft hover:text-ink"
+            >
               How it works
             </a>
-            <a href="#honesty" className="nav-link">
+            <a
+              href="#honesty"
+              className="text-[14.5px] text-ink-soft hover:text-ink"
+            >
               What it measures
             </a>
-            <a href="#pipeline" className="nav-link">
+            <a
+              href="#pipeline"
+              className="text-[14.5px] text-ink-soft hover:text-ink"
+            >
               Pipeline
             </a>
           </nav>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-5">
             {signedIn ? (
-              <Link href="/dashboard" className="btn btn-primary btn-sm">
+              <Link href="/dashboard" className="btn btn-dark btn-sm">
                 Open dashboard
               </Link>
             ) : (
               <>
-                <Link href="/login" className="nav-link hidden sm:inline-block">
+                <Link
+                  href="/login"
+                  className="hidden text-[14.5px] text-ink-soft hover:text-ink sm:block"
+                >
                   Sign in
                 </Link>
                 <Link href="/signup" className="btn btn-dark btn-sm">
