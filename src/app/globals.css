@@ -1,0 +1,211 @@
+@import 'tailwindcss';
+
+/**
+ * Modaya design tokens.
+ *
+ * Single source of truth for the dark + mint direction. Components reference
+ * semantic token classes (bg-surface, text-muted, border-line) rather than
+ * one-off hex values, so a theme change is a change in one place.
+ */
+@theme {
+  /* Base surfaces: #0B0C11 is the canonical page background. */
+  --color-base-950: #0b0c11;
+  --color-base-900: #101119;
+  --color-surface: #14161f;
+  --color-surface-2: #1a1d28;
+  --color-surface-3: #212533;
+
+  /* Hairlines */
+  --color-line: #242936;
+  --color-line-strong: #333a4c;
+
+  /* Text */
+  --color-ink: #eceef5;
+  --color-ink-soft: #c5cad8;
+  --color-muted: #8b93a7;
+  --color-faint: #5f677c;
+
+  /* Mint accent (#6EE7C9 is the canonical accent) */
+  --color-mint-600: #23a98a;
+  --color-mint-500: #34d3ae;
+  --color-mint-400: #6ee7c9;
+  --color-mint-300: #9df2de;
+  --color-mint-950: #08231d;
+
+  /* Semantic */
+  --color-warn-400: #f0c274;
+  --color-danger-400: #f08a8a;
+
+  --radius-card: 14px;
+  --radius-pill: 999px;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    background-color: var(--color-base-950);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: var(--color-mint-400);
+    color: #04231b;
+  }
+  a {
+    color: inherit;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-mint-400);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .container-page {
+    width: 100%;
+    max-width: 1120px;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.6rem 1.1rem;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease,
+      opacity 0.15s ease;
+    text-decoration: none;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  .btn-primary {
+    background: var(--color-mint-400);
+    color: #04231b;
+    font-weight: 600;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--color-mint-300);
+  }
+  .btn-secondary {
+    background: var(--color-surface-2);
+    border-color: var(--color-line-strong);
+    color: var(--color-ink);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background: var(--color-surface-3);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--color-ink-soft);
+    border-color: var(--color-line);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    color: var(--color-ink);
+    border-color: var(--color-line-strong);
+  }
+  .btn-sm {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  /* Forms */
+  .input {
+    width: 100%;
+    background: var(--color-base-900);
+    border: 1px solid var(--color-line);
+    border-radius: 10px;
+    padding: 0.65rem 0.85rem;
+    color: var(--color-ink);
+    font-size: 0.9375rem;
+  }
+  .input::placeholder {
+    color: var(--color-faint);
+  }
+  .input:focus {
+    border-color: var(--color-mint-600);
+    outline: none;
+    box-shadow: 0 0 0 3px rgb(110 231 201 / 0.12);
+  }
+  .label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-ink-soft);
+    margin-bottom: 0.4rem;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border: 1px solid var(--color-line-strong);
+    background: var(--color-surface-2);
+    border-radius: var(--radius-pill);
+    padding: 0.2rem 0.6rem;
+    font-size: 0.75rem;
+    color: var(--color-ink-soft);
+  }
+  .chip-measured {
+    border-color: rgb(110 231 201 / 0.4);
+    background: rgb(110 231 201 / 0.08);
+    color: var(--color-mint-300);
+  }
+  .chip-described {
+    border-color: rgb(240 194 116 / 0.35);
+    background: rgb(240 194 116 / 0.08);
+    color: var(--color-warn-400);
+  }
+
+  .hairline {
+    border-top: 1px solid var(--color-line);
+  }
+  .mint-glow {
+    background: radial-gradient(
+      60% 60% at 50% 0%,
+      rgb(110 231 201 / 0.18) 0%,
+      rgb(11 12 17 / 0) 70%
+    );
+  }
+  .mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+.animate-pulse-soft {
+  animation: pulse-soft 1.6s ease-in-out infinite;
+}
