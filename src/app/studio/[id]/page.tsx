@@ -3,13 +3,15 @@ import { notFound } from 'next/navigation';
 import { and, desc, eq } from 'drizzle-orm';
 import { requireUser } from '@/lib/auth/session';
 import { getDb } from '@/lib/db/client';
-import { mediaAssets, projects } from '@/lib/db/schema';
+import { mediaAssets, projects, styleProfiles } from '@/lib/db/schema';
 import { Wordmark } from '@/components/brand';
 import { MediaUploader } from '@/components/studio/media-uploader';
 import { MediaList } from '@/components/studio/media-list';
 import { TimelineEditor } from '@/components/studio/timeline-editor';
+import { StylePanel } from '@/components/studio/style-panel';
 import { requestContextFromHeaders } from '@/lib/storage/s3';
 import { latestSpec } from '@/lib/timeline/store';
+import type { StyleProfile as StyleProfileData } from '@/lib/style/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,7 +32,32 @@ export default async function StudioPage({ params }: { params: Promise<{ id: str
     .where(eq(mediaAssets.projectId, project.id))
     .orderBy(desc(mediaAssets.createdAt));
 
-  const [ctx, spec] = await Promise.all([requestContextFromHeaders(), latestSpec(project.id)]);
+  const [ctx, spec, profileRows] = await Promise.all([
+    requestContextFromHeaders(),
+    latestSpec(project.id),
+    getDb()
+      .select()
+      .from(styleProfiles)
+      .where(eq(styleProfiles.projectId, project.id))
+      .orderBy(desc(styleProfiles.createdAt)),
+  ]);
+
+  // Latest profile per asset, rendered on the server so the spec panel is
+  // readable without waiting for client hydration.
+  const profilesByAsset = new Map<string, StyleProfileData>();
+  for (const row of profileRows) {
+    if (profilesByAsset.has(row.assetId)) continue;
+    profilesByAsset.set(row.assetId, {
+      id: row.id,
+      projectId: row.projectId,
+      assetId: row.assetId,
+      measured: row.measured as StyleProfileData['measured'],
+      model: (row.model as StyleProfileData['model']) ?? null,
+      modelStatus: row.modelStatus as StyleProfileData['modelStatus'],
+      modelError: row.modelError,
+      createdAt: row.createdAt.toISOString(),
+    });
+  }
   const sources = assets.filter((a) => a.role === 'source');
   const references = assets.filter((a) => a.role === 'reference');
 
@@ -80,6 +107,40 @@ export default async function StudioPage({ params }: { params: Promise<{ id: str
               emptyLabel="No reference attached. Modaya works without one."
             />
           </div>
+        </section>
+
+        <section className="grid gap-4">
+          <div>
+            <h2 className="text-[13px] font-medium tracking-wide text-faint uppercase">
+              Style profiles
+            </h2>
+            <p className="mt-2 max-w-3xl text-[13.5px] leading-relaxed text-muted">
+              One profile per file. The <span className="text-mint-300">measured</span> layer is
+              deterministic math over sampled frames and decoded audio; the{' '}
+              <span className="text-warn-400">model-described</span> layer is prose from a
+              multimodal model looking at up to 8 sampled frames. They are never merged, and
+              timestamps only ever come from the measured side.
+            </p>
+          </div>
+          {assets.length === 0 ? (
+            <p className="rounded-lg bg-base-900 px-4 py-3.5 text-[13px] text-faint ring-1 ring-line">
+              Upload footage or a reference, then analyze it here.
+            </p>
+          ) : (
+            <div className="grid gap-4">
+              {assets
+                .filter((asset) => asset.role !== 'export')
+                .map((asset) => (
+                  <StylePanel
+                    key={`${asset.id}-${asset.createdAt}`}
+                    assetId={asset.id}
+                    filename={asset.filename}
+                    variant={asset.role === 'reference' ? 'full' : 'compact'}
+                    initialProfile={profilesByAsset.get(asset.id) ?? null}
+                  />
+                ))}
+            </div>
+          )}
         </section>
       </main>
     </div>

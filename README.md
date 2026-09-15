@@ -114,17 +114,31 @@ signed download URL. Specifically:
 
 **Style profile: measured vs model-described**
 
-A `StyleProfile` has two layers that are never merged:
+A `StyleProfile` has two layers that are never merged. The panel in the studio renders them
+side by side, each labelled with its source.
 
-- `measured` — deterministic, free, offline. Cut detection from frame-to-frame differences, shot
-  lengths, RMS/onset envelope from decoded PCM, and grade statistics (channel means, contrast,
-  saturation). Every timestamp in the system comes from this layer.
-- `model_described` — optional, needs an API key. Up to 8 sampled frames plus the transcript go to
-  a multimodal model, which returns structured JSON describing shot types, transition style,
-  caption style/position and hook structure in words. Validated strictly; unknown fields dropped;
-  timestamps are stripped rather than trusted.
+- **measured** — deterministic, free, offline, no key required.
+  - Sampling: 64×36 RGB frames at 8 fps and 16 kHz mono PCM, piped straight out of ffmpeg.
+  - Cut detection: mean absolute frame-to-frame difference, thresholded at
+    `max(6, median + 4 · 1.4826·MAD)`. Median/MAD rather than mean/stdev on purpose: the real cuts
+    inflate a mean/stdev threshold above themselves, so a clip with two hard cuts and no other
+    motion would report zero cuts. Cuts must also be local maxima with a 0.25 s refractory period.
+  - The profile states its own precision (`±0.125 s`, the sampling interval) instead of implying
+    frame accuracy.
+  - Shot lengths, RMS/onset envelope, silence ranges, and colour statistics (channel means, luma
+    contrast as σ, HSV saturation, R−B warmth) are all computed from those samples.
+  - Loudness is reported two ways: mean over active windows, and mean including silence. Averaging
+    dB across digital silence drags the number down to a meaningless value, so both are shown.
+- **model_described** — optional, needs `OPENAI_API_KEY` or `ANTHROPIC_API_KEY`. Up to 8 frames
+  (the midpoints of the longest shots — measurement drives the sampling) plus an embedded subtitle
+  transcript if the file has one. The response is validated against a strict schema: unknown fields
+  are dropped, missing fields take declared defaults, and the schema has no timestamp fields at all,
+  so timing can only ever come from the measured layer. Time-shaped prose is kept but flagged in the
+  panel's caveats.
 
-If no model key is configured, the UI says the layer is unavailable instead of inventing content.
+If no key is configured the UI states that the layer is unavailable rather than inventing content.
+`MEASURED_SCHEMA_VERSION` versions the measured blob: a profile recorded by an older build renders
+its missing fields as “—” with a re-analyze prompt, never as a plausible-looking number.
 
 ## Project status
 
@@ -132,7 +146,7 @@ If no model key is configured, the UI says the layer is unavailable instead of i
 | --- | --- | --- |
 | 0 | Foundation: auth, Postgres, object storage, landing page, dashboard | done |
 | 1 | Real render + export pipeline (upload → ffmpeg → MP4 download) | done |
-| 2 | Reference style engine (measured + model-described) | not started |
+| 2 | Reference style engine (measured + model-described) | done |
 | 3 | AI edit ops (chat-driven editing) | not started |
 | 4 | Studio UX | not started |
 | 5 | Growth features (clipping, captions at scale, multi-format) | not started |

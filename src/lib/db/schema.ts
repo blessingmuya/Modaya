@@ -150,8 +150,36 @@ export const jobs = pgTable(
   }),
 );
 
+/**
+ * A StyleProfile keeps the two layers in separate columns so they can never be
+ * merged by accident: `measured` is deterministic math, `model` is prose from a
+ * multimodal model (or null when no key is configured).
+ */
+export const styleProfiles = pgTable(
+  'style_profiles',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    projectId: uuid('project_id')
+      .notNull()
+      .references(() => projects.id, { onDelete: 'cascade' }),
+    assetId: uuid('asset_id')
+      .notNull()
+      .references(() => mediaAssets.id, { onDelete: 'cascade' }),
+    measured: jsonb('measured').notNull(),
+    model: jsonb('model'),
+    /** ok | skipped_no_key | failed */
+    modelStatus: text('model_status').notNull().default('skipped_no_key'),
+    modelError: text('model_error'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    assetIdx: index('style_profiles_asset_idx').on(t.assetId, t.createdAt),
+  }),
+);
+
 export type User = typeof users.$inferSelect;
 export type Project = typeof projects.$inferSelect;
 export type MediaAsset = typeof mediaAssets.$inferSelect;
 export type Job = typeof jobs.$inferSelect;
 export type TimelineVersion = typeof timelineVersions.$inferSelect;
+export type StyleProfileRow = typeof styleProfiles.$inferSelect;

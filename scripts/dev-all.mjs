@@ -101,8 +101,11 @@ await new Promise((resolve) => {
 });
 
 // 3. Worker ------------------------------------------------------------------
+// Watch mode: editing the pipeline reloads the worker, so a dev session cannot
+// silently keep running yesterday's renderer. The worker finishes an in-flight
+// job before exiting on SIGTERM, so a reload does not kill an active render.
 if (existsSync(join(ROOT, 'src/worker/index.ts'))) {
-  run('worker', 'npx', ['tsx', 'src/worker/index.ts']);
+  run('worker', 'npx', ['tsx', 'watch', '--clear-screen=false', 'src/worker/index.ts']);
 } else {
   console.log('[dev] no worker entry yet, skipping');
 }

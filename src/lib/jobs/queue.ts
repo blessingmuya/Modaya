@@ -2,9 +2,11 @@ import { and, desc, eq, lt, sql } from 'drizzle-orm';
 import { getDb } from '@/lib/db/client';
 import { jobs, type Job } from '@/lib/db/schema';
 
-export type JobType = 'probe_media' | 'render_export';
+export type JobType = 'probe_media' | 'render_export' | 'analyze_media';
 
 export type ProbeMediaPayload = { assetId: string };
+export type AnalyzeMediaPayload = { assetId: string; includeModel: boolean };
+
 export type RenderExportPayload = {
   /** The exact spec to render — frozen at enqueue time, never re-read later. */
   spec: unknown;
@@ -18,7 +20,7 @@ const STUCK_AFTER_MS = 10 * 60 * 1000;
 export async function enqueueJob(
   projectId: string,
   type: JobType,
-  payload: ProbeMediaPayload | RenderExportPayload,
+  payload: ProbeMediaPayload | RenderExportPayload | AnalyzeMediaPayload,
 ): Promise<Job> {
   const [job] = await getDb()
     .insert(jobs)

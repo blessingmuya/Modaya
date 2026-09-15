@@ -15,12 +15,14 @@ import {
   requeueStuckJobs,
   type JobType,
 } from '@/lib/jobs/queue';
+import { handleAnalyzeMedia } from './handlers/analyze-media';
 import { handleProbeMedia } from './handlers/probe-media';
 import { handleRenderExport } from './handlers/render-export';
 
 const HANDLERS: Record<JobType, (job: never) => Promise<Record<string, unknown>>> = {
   probe_media: handleProbeMedia as never,
   render_export: handleRenderExport as never,
+  analyze_media: handleAnalyzeMedia as never,
 };
 
 let running = true;
