@@ -142,26 +142,43 @@ its missing fields as “—” with a re-analyze prompt, never as a plausible-l
 
 ## Design tokens
 
-The visual direction is editorial: a warm near-white canvas, a display serif for headlines, and one
-saturated accent. Every colour lives in the `@theme` block of `src/app/globals.css`; components
-reference semantic classes (`bg-surface`, `text-muted`, `border-line`) rather than hex values, so the
-whole app follows from that one file. Mint stays the accent — the surfaces, hairlines and text tiers
-are re-tuned rather than the accent being replaced, and re-solving them for a new canvas is a
-five-value change.
+The visual direction is a near-black canvas with one saturated accent, a geometric grotesque for
+headlines, and an italic serif carrying the second line of a headline. Every colour lives in the
+`@theme` block of `src/app/globals.css`; components reference semantic classes (`bg-surface`,
+`text-muted`, `border-line`) or **role-named** accent tokens rather than shades, so a theme change is
+a change in one file and not a sweep through components:
 
-Typography: Instrument Serif for display only, self-hosted through `@fontsource` rather than a
-runtime font CDN, so the page has no third-party dependency at load.
+| Role | Meaning |
+| --- | --- |
+| `accent` | the accent as a fill |
+| `accent-strong` | the accent as text on the canvas |
+| `accent-soft` | a tinted chip background |
+| `accent-on` | text placed on an accent fill |
+| `warn-text` / `warn-soft` | warning text, and its chip background |
+| `danger-text` / `danger-soft` | danger text, and its chip background |
 
-The landing hero plays real clips: `var/` is scratch space, so
-`public/media/hero-*.mp4` are exports produced by this project's own `planRender` +
-`buildRenderArgs` (the middle one has a punch-in applied), downscaled to 720x1280 for the web.
+Typography is self-hosted through `@fontsource`, never a runtime font CDN: Plus Jakarta Sans
+(variable) for the UI and headlines, Instrument Serif for the italic display line (it ships a drawn
+italic, which is the point — a synthesised oblique would not match).
 
-Light backgrounds make contrast a real constraint rather than a detail. `tests/contrast.test.ts`
-parses the token block and asserts WCAG AA (4.5:1) for each text/background pair the UI renders. It
-found genuine problems on the first pass: a tertiary text tier at 2.6:1, and several accent-on-tint
-pairs just under the line. A light canvas cannot fit four text tiers at AA while keeping them
-visually distinct — the first attempt landed two tiers 1.007x apart, which is one tier, not two — so
-the ladder is three measured tiers.
+The landing hero plays real clips. `public/media/hero-*.mp4` are exports produced by this project's
+own `planRender` + `buildRenderArgs` (the middle one has a punch-in applied), downscaled to 720x1280
+for the web — so the page shows the product's output rather than stock footage.
+
+### Contrast and token integrity
+
+Light backgrounds make contrast a constraint rather than a detail, and so do very dark ones.
+`tests/contrast.test.ts` parses the token block and enforces two things:
+
+- **WCAG AA (4.5:1)** for every text/background pair the UI renders. It has caught real defects twice:
+  a tertiary text tier at 2.58:1 on a light canvas, and a tertiary tier at 4.33:1 on a dark inset.
+- **No dangling token references.** A renamed token silently deletes every class using it — the
+  element keeps its layout and loses its colour, which is how a status dot becomes invisible instead
+  of obviously broken. Renaming `danger-400` to `danger-text` broke two live status indicators before
+  this check existed.
+
+A canvas can only carry so many text tiers before they stop being distinguishable: an early attempt
+put two tiers 1.007x apart, which is one tier wearing two names. The ladder is three measured tiers.
 
 ## Project status
 

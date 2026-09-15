@@ -119,9 +119,9 @@ export default async function StudioPage({
             </h2>
             <p className="mt-2 max-w-3xl text-[13.5px] leading-relaxed text-muted">
               One profile per file. The{" "}
-              <span className="text-mint-700">measured</span> layer is
+              <span className="text-accent-strong">measured</span> layer is
               deterministic math over sampled frames and decoded audio; the{" "}
-              <span className="text-warn-400">model-described</span> layer is
+              <span className="text-warn-text">model-described</span> layer is
               prose from a multimodal model looking at up to 8 sampled frames.
               They are never merged, and timestamps only ever come from the
               measured side.

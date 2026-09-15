@@ -3,85 +3,83 @@
 /**
  * Modaya design tokens.
  *
- * Single source of truth for the light, airy direction: a near-white canvas with
- * one saturated accent, soft large radii and floating surfaces. Components
- * reference semantic token classes (bg-surface, text-muted, border-line) rather
- * than one-off hex values, so a theme change is a change in one place — which is
- * exactly what this file is.
+ * Single source of truth for the visual direction: a near-black canvas, one
+ * saturated accent, a geometric grotesque for headlines with an italic serif
+ * carrying the second line, and soft floating surfaces.
  *
- * Accent: mint is kept from the previous direction. The light references all pair
- * a quiet canvas with one saturated accent; swapping mint for a new hue would
- * have been brand churn, so the scale was re-tuned for light backgrounds instead.
- * Fills stay on mint-400; text and icons use mint-600/700, which are dark enough
- * to read on white (mint-400 as text on white fails contrast).
+ * Components reference semantic classes (bg-surface, text-muted, text-accent) or
+ * role-named tokens, never raw hex — which is what makes a theme change a change
+ * in this file. The accent is described by ROLE (`accent`, `accent-strong`,
+ * `accent-soft`, `accent-on`) rather than by shade, so the same component markup
+ * works whatever the canvas is doing.
  */
 @theme {
   /* Canvas — the page itself. */
-  --color-canvas: #f1f1ef;
-  --color-canvas-2: #ffffff;
+  --color-canvas: #0a0a0c;
+  --color-canvas-2: #101014;
 
   /* Surfaces. `surface` is cards; the numbered steps are insets inside a card. */
-  --color-surface: #ffffff;
-  --color-surface-2: #f6f6f4;
-  --color-surface-3: #eaeae7;
+  --color-surface: #131317;
+  --color-surface-2: #1a1a20;
+  --color-surface-3: #24242c;
 
-  /* Deepest ink in the system. Used for text that sits on the accent fill and
-     for hard dividers — not as a page background. */
-  --color-base-950: #111214;
-  --color-base-900: #f6f6f4;
+  /* Deepest ink in the system: the darkest surface, and the colour of text that
+     sits on an accent fill. */
+  --color-base-950: #08080a;
+  --color-base-900: #17171c;
 
   /* Hairlines */
-  --color-line: #e4e4e1;
-  --color-line-strong: #cbcbc7;
+  --color-line: #26262e;
+  --color-line-strong: #3a3a45;
 
-  /* Text */
-  --color-ink: #14161a;
-  --color-ink-soft: #33363d;
-  /* Text tiers. On a light canvas a fourth tier cannot reach AA and stay
-     visually distinct from the third — the first attempt at #949cb5 measured
-     2.6:1 and #656e8e landed 1.007x from muted, i.e. indistinguishable. So the
-     ladder is three real tiers with measured separation: 1.60x and 1.37x. */
-  --color-muted: #54585f;
-  --color-faint: #686d74;
+  /* Text tiers. Three, with measurable separation between them. */
+  --color-ink: #f4f4f6;
+  --color-ink-soft: #c9c9d2;
+  --color-muted: #9a9aa6;
+  --color-faint: #7f7f8a;
 
-  /* Mint accent, re-tuned for a light canvas. */
-  --color-mint-700: #0a7a65;
-  --color-mint-600: #0c7c65;
-  --color-mint-500: #16b394;
+  /* Accent, by role. Fills use `accent`; text uses `accent-strong`, which is
+     light enough to read on the dark canvas; `accent-soft` is the tinted chip
+     background; `accent-on` is text placed on an accent fill. */
+  --color-accent: #2dd4b0;
+  --color-accent-strong: #7ceacd;
+  --color-accent-soft: #10261f;
+  --color-accent-on: #04231b;
+  --color-accent-dim: #1c9c81;
+
+  /* Kept as literal mint steps too, for the logo mark and decorative fills. */
   --color-mint-400: #2dd4b0;
-  --color-mint-300: #8fedda;
-  --color-mint-200: #c7f7ed;
-  --color-mint-100: #e4fcf6;
-  --color-mint-950: #05372c;
+  --color-mint-500: #16b394;
 
-  /* Semantic. Both are dark enough to read as text on a light surface. */
-  --color-warn-400: #966116;
-  --color-warn-100: #fdf3e0;
-  --color-danger-400: #bd433e;
-  --color-danger-100: #fdecea;
+  /* Semantic, by role. */
+  --color-warn-text: #e8c07a;
+  --color-warn-soft: #2a2114;
+  --color-danger-text: #f09a95;
+  --color-danger-soft: #2b1615;
 
-  --radius-card: 18px;
+  --radius-card: 20px;
   --radius-pill: 999px;
 
   /* Soft, diffuse shadows. Floating surfaces need depth without a hard edge. */
-  --shadow-card: 0 1px 2px rgb(20 22 26 / 0.04), 0 8px 24px -12px rgb(20 22 26 / 0.1);
-  --shadow-float: 0 2px 6px rgb(20 22 26 / 0.05), 0 20px 44px -18px rgb(20 22 26 / 0.2);
-  --shadow-lift: 0 6px 12px rgb(20 22 26 / 0.06), 0 40px 72px -28px rgb(20 22 26 / 0.28);
-  --shadow-pill: 0 1px 2px rgb(20 22 26 / 0.05), 0 8px 24px -10px rgb(20 22 26 / 0.16);
-  /* The tilted hero cards sit on this: wide, soft, low contrast. */
-  --shadow-card-lift: 0 2px 8px rgb(20 22 26 / 0.06), 0 36px 60px -20px rgb(20 22 26 / 0.3);
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 30px -14px rgb(0 0 0 / 0.7);
+  --shadow-float: 0 2px 6px rgb(0 0 0 / 0.45), 0 22px 48px -20px rgb(0 0 0 / 0.8);
+  --shadow-lift: 0 6px 14px rgb(0 0 0 / 0.5), 0 44px 80px -30px rgb(0 0 0 / 0.85);
+  --shadow-pill: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 26px -12px rgb(0 0 0 / 0.7);
+  /* The tilted hero cards sit on this. */
+  --shadow-card-lift: 0 2px 10px rgb(0 0 0 / 0.5), 0 40px 70px -22px rgb(0 0 0 / 0.9);
 
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
-    Arial, sans-serif;
-  /* Display serif for headlines only. Self-hosted via @fontsource: the page must
-     not depend on a third-party font CDN at runtime. */
+  --font-sans:
+    'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* Display serif, used only for the italic line in a headline. Self-hosted
+     through @fontsource: the page must not depend on a font CDN at runtime. */
   --font-display: 'Instrument Serif', ui-serif, Georgia, 'Times New Roman', serif;
   --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', monospace;
 }
 
 @layer base {
   html {
-    color-scheme: light;
+    color-scheme: dark;
     scroll-behavior: smooth;
   }
   body {
@@ -91,14 +89,14 @@
     -webkit-font-smoothing: antialiased;
   }
   ::selection {
-    background: var(--color-mint-200);
-    color: var(--color-mint-950);
+    background: var(--color-accent);
+    color: var(--color-accent-on);
   }
   a {
     color: inherit;
   }
   :focus-visible {
-    outline: 2px solid var(--color-mint-600);
+    outline: 2px solid var(--color-accent);
     outline-offset: 2px;
   }
 }
@@ -106,9 +104,9 @@
 @layer components {
   .container-page {
     width: 100%;
-    max-width: 1120px;
+    max-width: 1140px;
     margin-inline: auto;
-    padding-inline: 1.25rem;
+    padding-inline: 1.5rem;
   }
 
   .card {
@@ -130,8 +128,12 @@
     padding: 0.6rem 1.1rem;
     border: 1px solid transparent;
     cursor: pointer;
-    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease,
-      box-shadow 0.15s ease, opacity 0.15s ease;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease,
+      color 0.15s ease,
+      box-shadow 0.15s ease,
+      opacity 0.15s ease;
     text-decoration: none;
     line-height: 1.2;
     white-space: nowrap;
@@ -140,33 +142,32 @@
     opacity: 0.5;
     cursor: not-allowed;
   }
+  /* Highest-contrast pill. Inverts with the theme: dark-on-light here, and
+     light-on-dark, so "solid" always means "maximum contrast". */
+  .btn-solid {
+    background: var(--color-ink);
+    color: var(--color-canvas);
+    font-weight: 600;
+  }
+  .btn-solid:hover:not(:disabled) {
+    background: var(--color-ink-soft);
+  }
   .btn-primary {
-    background: var(--color-mint-400);
-    color: var(--color-base-950);
+    background: var(--color-accent);
+    color: var(--color-accent-on);
     font-weight: 600;
     box-shadow: var(--shadow-pill);
   }
   .btn-primary:hover:not(:disabled) {
-    background: var(--color-mint-500);
-  }
-  /* Dark pill button, as in the references' secondary CTA. */
-  .btn-dark {
-    background: var(--color-base-950);
-    color: #ffffff;
-    font-weight: 600;
-    box-shadow: var(--shadow-pill);
-  }
-  .btn-dark:hover:not(:disabled) {
-    background: #1b2136;
+    background: var(--color-accent-strong);
   }
   .btn-secondary {
-    background: var(--color-surface);
+    background: var(--color-surface-2);
     border-color: var(--color-line-strong);
     color: var(--color-ink);
-    box-shadow: var(--shadow-card);
   }
   .btn-secondary:hover:not(:disabled) {
-    background: var(--color-surface-2);
+    background: var(--color-surface-3);
   }
   .btn-ghost {
     background: transparent;
@@ -179,7 +180,7 @@
     border-color: var(--color-line-strong);
   }
   .btn-sm {
-    padding: 0.35rem 0.75rem;
+    padding: 0.4rem 0.85rem;
     font-size: 0.8125rem;
   }
 
@@ -197,9 +198,9 @@
     color: var(--color-faint);
   }
   .input:focus {
-    border-color: var(--color-mint-600);
+    border-color: var(--color-accent-dim);
     outline: none;
-    box-shadow: 0 0 0 3px rgb(45 212 176 / 0.18);
+    box-shadow: 0 0 0 3px rgb(45 212 176 / 0.16);
   }
   .label {
     display: block;
@@ -212,51 +213,55 @@
   .chip {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.4rem;
     border: 1px solid var(--color-line-strong);
-    background: var(--color-surface);
+    background: var(--color-surface-2);
     border-radius: var(--radius-pill);
-    padding: 0.2rem 0.6rem;
+    padding: 0.3rem 0.7rem;
     font-size: 0.75rem;
     color: var(--color-ink-soft);
   }
   .chip-measured {
-    border-color: rgb(45 212 176 / 0.45);
-    background: var(--color-mint-100);
-    color: var(--color-mint-700);
+    border-color: rgb(45 212 176 / 0.3);
+    background: var(--color-accent-soft);
+    color: var(--color-accent-strong);
   }
   .chip-described {
-    border-color: rgb(176 115 26 / 0.35);
-    background: var(--color-warn-100);
-    color: var(--color-warn-400);
+    border-color: rgb(232 192 122 / 0.28);
+    background: var(--color-warn-soft);
+    color: var(--color-warn-text);
   }
 
-  /* Floating frosted pill — the navigation treatment from the references. */
+  /* ------------------------------------------------------------- navigation */
+
+  /* Floating frosted pill, centred in the header. */
   .nav-shell {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.15rem;
     border-radius: var(--radius-pill);
-    border: 1px solid rgb(228 231 240 / 0.9);
-    background: rgb(255 255 255 / 0.72);
-    backdrop-filter: blur(14px) saturate(1.6);
+    border: 1px solid var(--color-line);
+    background: rgb(26 26 32 / 0.72);
+    backdrop-filter: blur(16px) saturate(1.4);
     box-shadow: var(--shadow-pill);
   }
   .nav-link {
     border-radius: var(--radius-pill);
-    padding: 0.4rem 0.85rem;
+    padding: 0.45rem 0.9rem;
     font-size: 0.8125rem;
     color: var(--color-muted);
     text-decoration: none;
-    transition: color 0.15s ease, background-color 0.15s ease;
+    transition:
+      color 0.15s ease,
+      background-color 0.15s ease;
   }
   .nav-link:hover {
     color: var(--color-ink);
-    background: rgb(15 20 36 / 0.04);
   }
+  /* Set by the scroll-spy, so the highlight reflects where you actually are. */
   .nav-link-active {
     color: var(--color-ink);
-    background: rgb(15 20 36 / 0.05);
+    background: rgb(36 36 44 / 0.9);
   }
 
   .hairline {
@@ -267,41 +272,51 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* Editorial headline: serif, tight leading, italic words carrying emphasis. */
-  .display {
+  /* ------------------------------------------------------------ typography */
+
+  /* The second line of a headline: a real drawn serif italic, set larger than the
+     sans line it follows, the way the reference does it. */
+  .display-accent {
     font-family: var(--font-display);
     font-weight: 400;
-    letter-spacing: -0.01em;
-    line-height: 1.06;
+    font-style: italic;
+    letter-spacing: -0.005em;
   }
 
-  /* ------------------------------------------------------------ atmosphere */
+  /* ------------------------------------------------------------- atmosphere */
 
-  /* Soft diagonal light streaks, the way light falls across a wall.
-     Decorative only. */
+  /* Soft vertical falloff from the top of the page. Decorative only. */
   .atmosphere {
-    background-image: repeating-linear-gradient(
-      104deg,
-      rgb(255 255 255 / 0.9) 0px,
-      rgb(255 255 255 / 0.9) 3px,
-      rgb(255 255 255 / 0) 3px,
-      rgb(255 255 255 / 0) 54px
+    background-image: radial-gradient(
+      62% 42% at 50% 0%,
+      rgb(45 212 176 / 0.14) 0%,
+      rgb(10 10 12 / 0) 72%
     );
   }
 
-  /* Faint dotted field, as in the quso reference. Decorative only. */
+  /* Faint dotted field. Decorative only. */
   .grid-dots {
-    background-image: radial-gradient(rgb(20 22 26 / 0.1) 1px, transparent 1px);
-    background-size: 24px 24px;
+    background-image: radial-gradient(rgb(255 255 255 / 0.09) 1px, transparent 1px);
+    background-size: 26px 26px;
+  }
+
+  /* Film grain, as a tiny inline SVG so there is no extra request. */
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
   }
 
   /* A floating panel. Depth without a hard border. */
   .float-card {
-    background: rgb(255 255 255 / 0.94);
-    border: 1px solid rgb(228 231 240 / 0.9);
-    border-radius: 20px;
+    background: rgb(26 26 32 / 0.92);
+    border: 1px solid var(--color-line-strong);
+    border-radius: 16px;
     box-shadow: var(--shadow-float);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
   }
 }
 

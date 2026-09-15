@@ -32,7 +32,7 @@ export function HowItWorks() {
         <div className="mt-10 grid gap-5 md:grid-cols-3">
           {STEPS.map((step) => (
             <div key={step.n} className="card p-6">
-              <span className="mono text-xs text-mint-600">{step.n}</span>
+              <span className="mono text-xs text-accent-strong">{step.n}</span>
               <h3 className="mt-4 text-lg font-medium text-ink">
                 {step.title}
               </h3>

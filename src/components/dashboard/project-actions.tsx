@@ -46,7 +46,7 @@ export function NewProjectForm() {
       <button type="submit" className="btn btn-primary" disabled={busy}>
         {busy ? 'Creating…' : 'New project'}
       </button>
-      {error && <span className="text-[12.5px] text-danger-400">{error}</span>}
+      {error && <span className="text-[12.5px] text-danger-text">{error}</span>}
     </form>
   );
 }

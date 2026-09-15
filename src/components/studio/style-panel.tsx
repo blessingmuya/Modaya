@@ -150,7 +150,7 @@ export function StylePanel({
       )}
 
       {state.error && (
-        <p className="mt-3 text-[12.5px] text-danger-400">{state.error}</p>
+        <p className="mt-3 text-[12.5px] text-danger-text">{state.error}</p>
       )}
 
       {!profile && !busy && !state.error && (
@@ -193,7 +193,7 @@ function MeasuredBlock({ profile }: { profile: StyleProfile }) {
       </header>
 
       {stale && (
-        <p className="mt-3 rounded-md bg-warn-400/10 px-3 py-2 text-[11.5px] text-warn-400 ring-1 ring-warn-400/25">
+        <p className="mt-3 rounded-md bg-warn-soft px-3 py-2 text-[11.5px] text-warn-text ring-1 ring-warn-text/25">
           This profile was recorded by an earlier version of the analyzer
           {missingFields.length > 0
             ? ` and is missing: ${missingFields.join(", ")}`
@@ -302,7 +302,7 @@ function MeasuredBlock({ profile }: { profile: StyleProfile }) {
 
       {cutTimes.length > 0 && (
         <details className="mt-4">
-          <summary className="cursor-pointer text-[12px] text-mint-600">
+          <summary className="cursor-pointer text-[12px] text-accent-strong">
             {cutTimes.length} measured cut points
           </summary>
           <p className="mono mt-2 text-[11.5px] break-words text-faint">

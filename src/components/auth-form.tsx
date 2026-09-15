@@ -103,7 +103,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
             {error && (
               <p
                 role="alert"
-                className="rounded-lg bg-danger-400/10 px-3.5 py-2.5 text-[13px] text-danger-400 ring-1 ring-danger-400/30"
+                className="rounded-lg bg-danger-soft px-3.5 py-2.5 text-[13px] text-danger-text ring-1 ring-danger-text/30"
               >
                 {error}
               </p>
@@ -122,7 +122,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
             {isSignup ? "Already have an account? " : "Need an account? "}
             <Link
               href={isSignup ? "/login" : "/signup"}
-              className="font-medium text-mint-700 hover:text-mint-600"
+              className="font-medium text-accent-strong hover:text-accent-strong"
             >
               {isSignup ? "Sign in" : "Sign up"}
             </Link>

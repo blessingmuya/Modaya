@@ -394,7 +394,7 @@ export function TimelineEditor({ projectId, sources, initialSpec }: Props) {
         </div>
 
         {message && (
-          <p className="mt-3 text-[12.5px] text-warn-400">{message}</p>
+          <p className="mt-3 text-[12.5px] text-warn-text">{message}</p>
         )}
       </div>
 
@@ -424,7 +424,7 @@ export function TimelineEditor({ projectId, sources, initialSpec }: Props) {
             <div className="h-1.5 w-full overflow-hidden rounded-full bg-surface-3">
               <div
                 className={`h-full rounded-full transition-[width] duration-200 ${
-                  render.status === "failed" ? "bg-danger-400" : "bg-mint-400"
+                  render.status === "failed" ? "bg-danger-text" : "bg-mint-400"
                 }`}
                 style={{
                   width: `${render.status === "succeeded" ? 100 : render.progress}%`,
@@ -434,7 +434,7 @@ export function TimelineEditor({ projectId, sources, initialSpec }: Props) {
             <div className="flex flex-wrap items-center justify-between gap-2 text-[12.5px]">
               <span
                 className={
-                  render.status === "failed" ? "text-danger-400" : "text-muted"
+                  render.status === "failed" ? "text-danger-text" : "text-muted"
                 }
               >
                 {render.status === "queued" && "Queued for the worker…"}
@@ -522,7 +522,7 @@ function ClipStrip({
             }`}
             title={`${clip.inSec.toFixed(2)}s → ${clip.outSec.toFixed(2)}s (source)`}
           >
-            <span className="mono block truncate text-[10px] text-mint-700">
+            <span className="mono block truncate text-[10px] text-accent-strong">
               {clipDuration(clip).toFixed(2)}s
             </span>
             <span className="mono block truncate text-[9.5px] text-faint">

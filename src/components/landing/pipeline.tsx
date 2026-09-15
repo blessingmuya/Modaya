@@ -48,7 +48,7 @@ export function Pipeline() {
               </span>
               <span
                 className={`w-40 shrink-0 text-[14.5px] font-medium ${
-                  node.tone === "mint" ? "text-mint-700" : "text-ink-soft"
+                  node.tone === "mint" ? "text-accent-strong" : "text-ink-soft"
                 }`}
               >
                 {node.label}

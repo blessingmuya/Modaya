@@ -1,7 +1,11 @@
 import type { Metadata } from 'next';
 import './globals.css';
-// Self-hosted display serif (roman + italic). Instrument Serif ships these two
-// cuts; the italic is a real drawn italic, which is what the headline leans on.
+// Self-hosted faces, no runtime font CDN:
+//  - Plus Jakarta Sans (variable weight) is the UI and headline grotesque.
+//  - Instrument Serif ships only a roman and a drawn italic; the italic is what
+//    the second line of a headline uses.
+import '@fontsource-variable/plus-jakarta-sans/wght.css';
+import '@fontsource-variable/plus-jakarta-sans/wght-italic.css';
 import '@fontsource/instrument-serif/latin-400.css';
 import '@fontsource/instrument-serif/latin-400-italic.css';
 

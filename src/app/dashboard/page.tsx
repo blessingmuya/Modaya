@@ -79,7 +79,7 @@ export default async function DashboardPage() {
                         created{" "}
                         {new Date(project.createdAt).toLocaleDateString()}
                       </span>
-                      <span className="text-mint-600">Open studio →</span>
+                      <span className="text-accent-strong">Open studio →</span>
                     </div>
                   </Link>
                 </li>
@@ -128,12 +128,12 @@ function HealthCard({
     <div className="card p-4">
       <div className="flex items-center gap-2.5">
         <span
-          className={`h-2 w-2 rounded-full ${ok ? "bg-mint-400" : "bg-danger-400"}`}
+          className={`h-2 w-2 rounded-full ${ok ? "bg-mint-400" : "bg-danger-text"}`}
           aria-hidden
         />
         <span className="text-[14px] font-medium text-ink">{title}</span>
         <span
-          className={`ml-auto text-[11.5px] ${ok ? "text-mint-600" : "text-danger-400"}`}
+          className={`ml-auto text-[11.5px] ${ok ? "text-accent-strong" : "text-danger-text"}`}
         >
           {ok ? "connected" : "unreachable"}
         </span>

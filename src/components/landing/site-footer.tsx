@@ -6,13 +6,13 @@ export function SiteFooter() {
     <footer className="pb-14">
       <div className="container-page">
         {/* Closing CTA gets the one dark surface on the page, so the eye lands on it. */}
-        <div className="relative overflow-hidden rounded-[24px] bg-base-950 px-8 py-11 text-center shadow-[var(--shadow-lift)] sm:px-12">
+        <div className="relative overflow-hidden rounded-[24px] bg-surface px-8 py-11 text-center shadow-[var(--shadow-lift)] sm:px-12">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 opacity-70"
             style={{
               backgroundImage:
-                "radial-gradient(40% 70% at 20% 0%, rgba(45,212,176,0.22) 0%, rgba(17,18,20,0) 70%), radial-gradient(40% 70% at 85% 100%, rgba(255,255,255,0.06) 0%, rgba(17,18,20,0) 70%)",
+                "radial-gradient(40% 70% at 20% 0%, rgba(45,212,176,0.22) 0%, rgba(19,19,23,0) 70%), radial-gradient(40% 70% at 85% 100%, rgba(255,255,255,0.06) 0%, rgba(19,19,23,0) 70%)",
             }}
           />
           <div className="relative">

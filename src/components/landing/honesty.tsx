@@ -21,7 +21,7 @@ export function Honesty() {
           Two layers, labelled by where they came from
         </h2>
         <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-ink-soft">
-          A <span className="mono text-mint-700">StyleProfile</span> keeps
+          A <span className="mono text-accent-strong">StyleProfile</span> keeps
           measurement and description in separate fields. Timestamps only ever
           come from the measured layer — a language model is never asked for,
           and never trusted with, a number it cannot know.

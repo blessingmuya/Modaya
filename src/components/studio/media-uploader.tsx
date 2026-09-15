@@ -157,7 +157,7 @@ export function MediaUploader({ projectId }: { projectId: string }) {
       {message && (
         <p
           className={`mt-3 text-[12.5px] ${
-            phase === "error" ? "text-danger-400" : "text-muted"
+            phase === "error" ? "text-danger-text" : "text-muted"
           }`}
         >
           {message}
