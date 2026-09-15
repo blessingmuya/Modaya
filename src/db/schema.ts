@@ -88,3 +88,20 @@ export type User = typeof users.$inferSelect;
 export type Project = typeof projects.$inferSelect;
 export type MediaAsset = typeof mediaAssets.$inferSelect;
 export type RenderJob = typeof renderJobs.$inferSelect;
+
+export const styleProfiles = pgTable(
+  "style_profiles",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    projectId: uuid("project_id")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    assetId: uuid("asset_id")
+      .notNull()
+      .references(() => mediaAssets.id, { onDelete: "cascade" })
+      .unique(),
+    profile: jsonb("profile").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("style_project_idx").on(t.projectId)],
+);

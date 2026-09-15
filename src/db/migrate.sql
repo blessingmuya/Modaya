@@ -55,3 +55,13 @@ CREATE TABLE IF NOT EXISTS render_jobs (
 );
 CREATE INDEX IF NOT EXISTS jobs_status_idx ON render_jobs(status);
 CREATE INDEX IF NOT EXISTS jobs_project_idx ON render_jobs(project_id);
+
+CREATE TABLE IF NOT EXISTS style_profiles (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id uuid NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  asset_id uuid NOT NULL REFERENCES media_assets(id) ON DELETE CASCADE,
+  profile jsonb NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS style_project_idx ON style_profiles(project_id);
+CREATE UNIQUE INDEX IF NOT EXISTS style_asset_uidx ON style_profiles(asset_id);
