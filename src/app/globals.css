@@ -3,41 +3,71 @@
 /**
  * Modaya design tokens.
  *
- * Single source of truth for the dark + mint direction. Components reference
- * semantic token classes (bg-surface, text-muted, border-line) rather than
- * one-off hex values, so a theme change is a change in one place.
+ * Single source of truth for the light, airy direction: a near-white canvas with
+ * one saturated accent, soft large radii and floating surfaces. Components
+ * reference semantic token classes (bg-surface, text-muted, border-line) rather
+ * than one-off hex values, so a theme change is a change in one place — which is
+ * exactly what this file is.
+ *
+ * Accent: mint is kept from the previous direction. The light references all pair
+ * a quiet canvas with one saturated accent; swapping mint for a new hue would
+ * have been brand churn, so the scale was re-tuned for light backgrounds instead.
+ * Fills stay on mint-400; text and icons use mint-600/700, which are dark enough
+ * to read on white (mint-400 as text on white fails contrast).
  */
 @theme {
-  /* Base surfaces: #0B0C11 is the canonical page background. */
-  --color-base-950: #0b0c11;
-  --color-base-900: #101119;
-  --color-surface: #14161f;
-  --color-surface-2: #1a1d28;
-  --color-surface-3: #212533;
+  /* Canvas — the page itself. */
+  --color-canvas: #f7f8fc;
+  --color-canvas-2: #ffffff;
+
+  /* Surfaces. `surface` is cards; the numbered steps are insets inside a card. */
+  --color-surface: #ffffff;
+  --color-surface-2: #f2f4f9;
+  --color-surface-3: #e7eaf2;
+
+  /* Deepest ink in the system. Used for text that sits on the accent fill and
+     for hard dividers — not as a page background. */
+  --color-base-950: #0a0e1a;
+  --color-base-900: #f1f3f9;
 
   /* Hairlines */
-  --color-line: #242936;
-  --color-line-strong: #333a4c;
+  --color-line: #e4e7f0;
+  --color-line-strong: #ccd2e1;
 
   /* Text */
-  --color-ink: #eceef5;
-  --color-ink-soft: #c5cad8;
-  --color-muted: #8b93a7;
-  --color-faint: #5f677c;
+  --color-ink: #0f1424;
+  --color-ink-soft: #333c56;
+  /* Text tiers. On a light canvas a fourth tier cannot reach AA and stay
+     visually distinct from the third — the first attempt at #949cb5 measured
+     2.6:1 and #656e8e landed 1.007x from muted, i.e. indistinguishable. So the
+     ladder is three real tiers with measured separation: 1.60x and 1.37x. */
+  --color-muted: #525a74;
+  --color-faint: #6a6f81;
 
-  /* Mint accent (#6EE7C9 is the canonical accent) */
-  --color-mint-600: #23a98a;
-  --color-mint-500: #34d3ae;
-  --color-mint-400: #6ee7c9;
-  --color-mint-300: #9df2de;
-  --color-mint-950: #08231d;
+  /* Mint accent, re-tuned for a light canvas. */
+  --color-mint-700: #0a7a65;
+  --color-mint-600: #0c8169;
+  --color-mint-500: #16b394;
+  --color-mint-400: #2dd4b0;
+  --color-mint-300: #8fedda;
+  --color-mint-200: #c7f7ed;
+  --color-mint-100: #e4fcf6;
+  --color-mint-950: #05372c;
 
-  /* Semantic */
-  --color-warn-400: #f0c274;
-  --color-danger-400: #f08a8a;
+  /* Semantic. Both are dark enough to read as text on a light surface. */
+  --color-warn-400: #9a6417;
+  --color-warn-100: #fdf3e0;
+  --color-danger-400: #be433e;
+  --color-danger-100: #fdecea;
 
-  --radius-card: 14px;
+  --radius-card: 18px;
   --radius-pill: 999px;
+
+  /* Soft, diffuse shadows. Floating surfaces need depth without a hard edge. */
+  --shadow-card: 0 1px 2px rgb(15 20 36 / 0.04), 0 8px 24px -12px rgb(15 20 36 / 0.1);
+  --shadow-float: 0 2px 4px rgb(15 20 36 / 0.04), 0 18px 40px -16px rgb(15 20 36 / 0.16);
+  --shadow-lift: 0 4px 8px rgb(15 20 36 / 0.05), 0 32px 64px -24px rgb(15 20 36 / 0.22);
+  --shadow-pill: 0 1px 2px rgb(15 20 36 / 0.05), 0 8px 24px -10px rgb(15 20 36 / 0.14);
 
   --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
     Arial, sans-serif;
@@ -46,23 +76,24 @@
 
 @layer base {
   html {
-    color-scheme: dark;
+    color-scheme: light;
+    scroll-behavior: smooth;
   }
   body {
-    background-color: var(--color-base-950);
+    background-color: var(--color-canvas);
     color: var(--color-ink);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
   ::selection {
-    background: var(--color-mint-400);
-    color: #04231b;
+    background: var(--color-mint-200);
+    color: var(--color-mint-950);
   }
   a {
     color: inherit;
   }
   :focus-visible {
-    outline: 2px solid var(--color-mint-400);
+    outline: 2px solid var(--color-mint-600);
     outline-offset: 2px;
   }
 }
@@ -79,6 +110,7 @@
     background: var(--color-surface);
     border: 1px solid var(--color-line);
     border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
   }
 
   /* Buttons */
@@ -94,30 +126,42 @@
     border: 1px solid transparent;
     cursor: pointer;
     transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease,
-      opacity 0.15s ease;
+      box-shadow 0.15s ease, opacity 0.15s ease;
     text-decoration: none;
     line-height: 1.2;
     white-space: nowrap;
   }
   .btn:disabled {
-    opacity: 0.55;
+    opacity: 0.5;
     cursor: not-allowed;
   }
   .btn-primary {
     background: var(--color-mint-400);
-    color: #04231b;
+    color: var(--color-base-950);
     font-weight: 600;
+    box-shadow: var(--shadow-pill);
   }
   .btn-primary:hover:not(:disabled) {
-    background: var(--color-mint-300);
+    background: var(--color-mint-500);
+  }
+  /* Dark pill button, as in the references' secondary CTA. */
+  .btn-dark {
+    background: var(--color-base-950);
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: var(--shadow-pill);
+  }
+  .btn-dark:hover:not(:disabled) {
+    background: #1b2136;
   }
   .btn-secondary {
-    background: var(--color-surface-2);
+    background: var(--color-surface);
     border-color: var(--color-line-strong);
     color: var(--color-ink);
+    box-shadow: var(--shadow-card);
   }
   .btn-secondary:hover:not(:disabled) {
-    background: var(--color-surface-3);
+    background: var(--color-surface-2);
   }
   .btn-ghost {
     background: transparent;
@@ -126,6 +170,7 @@
   }
   .btn-ghost:hover:not(:disabled) {
     color: var(--color-ink);
+    background: var(--color-surface);
     border-color: var(--color-line-strong);
   }
   .btn-sm {
@@ -136,9 +181,9 @@
   /* Forms */
   .input {
     width: 100%;
-    background: var(--color-base-900);
-    border: 1px solid var(--color-line);
-    border-radius: 10px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line-strong);
+    border-radius: 12px;
     padding: 0.65rem 0.85rem;
     color: var(--color-ink);
     font-size: 0.9375rem;
@@ -149,7 +194,7 @@
   .input:focus {
     border-color: var(--color-mint-600);
     outline: none;
-    box-shadow: 0 0 0 3px rgb(110 231 201 / 0.12);
+    box-shadow: 0 0 0 3px rgb(45 212 176 / 0.18);
   }
   .label {
     display: block;
@@ -164,36 +209,82 @@
     align-items: center;
     gap: 0.35rem;
     border: 1px solid var(--color-line-strong);
-    background: var(--color-surface-2);
+    background: var(--color-surface);
     border-radius: var(--radius-pill);
     padding: 0.2rem 0.6rem;
     font-size: 0.75rem;
     color: var(--color-ink-soft);
   }
   .chip-measured {
-    border-color: rgb(110 231 201 / 0.4);
-    background: rgb(110 231 201 / 0.08);
-    color: var(--color-mint-300);
+    border-color: rgb(45 212 176 / 0.45);
+    background: var(--color-mint-100);
+    color: var(--color-mint-700);
   }
   .chip-described {
-    border-color: rgb(240 194 116 / 0.35);
-    background: rgb(240 194 116 / 0.08);
+    border-color: rgb(176 115 26 / 0.35);
+    background: var(--color-warn-100);
     color: var(--color-warn-400);
+  }
+
+  /* Floating frosted pill — the navigation treatment from the references. */
+  .nav-shell {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgb(228 231 240 / 0.9);
+    background: rgb(255 255 255 / 0.72);
+    backdrop-filter: blur(14px) saturate(1.6);
+    box-shadow: var(--shadow-pill);
+  }
+  .nav-link {
+    border-radius: var(--radius-pill);
+    padding: 0.4rem 0.85rem;
+    font-size: 0.8125rem;
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color 0.15s ease, background-color 0.15s ease;
+  }
+  .nav-link:hover {
+    color: var(--color-ink);
+    background: rgb(15 20 36 / 0.04);
+  }
+  .nav-link-active {
+    color: var(--color-ink);
+    background: rgb(15 20 36 / 0.05);
   }
 
   .hairline {
     border-top: 1px solid var(--color-line);
   }
-  .mint-glow {
-    background: radial-gradient(
-      60% 60% at 50% 0%,
-      rgb(110 231 201 / 0.18) 0%,
-      rgb(11 12 17 / 0) 70%
-    );
-  }
   .mono {
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
+  }
+
+  /* ------------------------------------------------------------ atmosphere */
+
+  /* Soft coloured washes that sit behind a hero. Decorative only. */
+  .atmosphere {
+    background-image:
+      radial-gradient(48% 42% at 18% 8%, rgb(45 212 176 / 0.22) 0%, rgb(247 248 252 / 0) 68%),
+      radial-gradient(42% 38% at 82% 4%, rgb(129 140 248 / 0.2) 0%, rgb(247 248 252 / 0) 66%),
+      radial-gradient(60% 44% at 50% 96%, rgb(45 212 176 / 0.12) 0%, rgb(247 248 252 / 0) 70%);
+  }
+
+  /* Faint dotted field, as in the quso reference. Decorative only. */
+  .grid-dots {
+    background-image: radial-gradient(rgb(15 20 36 / 0.14) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  /* A floating panel. Depth without a hard border. */
+  .float-card {
+    background: rgb(255 255 255 / 0.94);
+    border: 1px solid rgb(228 231 240 / 0.9);
+    border-radius: 20px;
+    box-shadow: var(--shadow-float);
+    backdrop-filter: blur(10px);
   }
 }
 
@@ -208,4 +299,32 @@
 }
 .animate-pulse-soft {
   animation: pulse-soft 1.6s ease-in-out infinite;
+}
+
+/* Floating decorative panels drift very slightly. Suppressed for anyone who has
+   asked for reduced motion. */
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+.animate-drift {
+  animation: drift 9s ease-in-out infinite;
+}
+.animate-drift-slow {
+  animation: drift 13s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-drift,
+  .animate-drift-slow,
+  .animate-pulse-soft {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }

@@ -140,6 +140,21 @@ If no key is configured the UI states that the layer is unavailable rather than 
 `MEASURED_SCHEMA_VERSION` versions the measured blob: a profile recorded by an older build renders
 its missing fields as “—” with a re-analyze prompt, never as a plausible-looking number.
 
+## Design tokens
+
+The visual direction is a light canvas with one saturated accent. Every colour lives in the `@theme`
+block of `src/app/globals.css`; components reference semantic classes (`bg-surface`, `text-muted`,
+`border-line`) rather than hex values, so the whole app follows from that one file. Mint stays the
+accent — the surfaces, hairlines and text tiers were re-tuned for light backgrounds rather than the
+accent being replaced.
+
+Light backgrounds make contrast a real constraint rather than a detail. `tests/contrast.test.ts`
+parses the token block and asserts WCAG AA (4.5:1) for each text/background pair the UI renders. It
+found genuine problems on the first pass: a tertiary text tier at 2.6:1, and several accent-on-tint
+pairs just under the line. A light canvas cannot fit four text tiers at AA while keeping them
+visually distinct — the first attempt landed two tiers 1.007x apart, which is one tier, not two — so
+the ladder is three measured tiers.
+
 ## Project status
 
 | Phase | Scope | State |
@@ -147,7 +162,7 @@ its missing fields as “—” with a re-analyze prompt, never as a plausible-l
 | 0 | Foundation: auth, Postgres, object storage, landing page, dashboard | done |
 | 1 | Real render + export pipeline (upload → ffmpeg → MP4 download) | done |
 | 2 | Reference style engine (measured + model-described) | done |
-| 3 | AI edit ops (chat-driven editing) | not started |
+| 3 | AI edit ops (chat-driven editing) | in progress — ops layer done, model call + UI pending |
 | 4 | Studio UX | not started |
 | 5 | Growth features (clipping, captions at scale, multi-format) | not started |
 | 6 | Production hardening | not started |
@@ -157,5 +172,10 @@ its missing fields as “—” with a re-analyze prompt, never as a plausible-l
 ```bash
 npm test
 ```
+
+The render tests execute the real ffmpeg filter graph and compare **pre-encode** frames. Encoded
+output is the wrong instrument for asking whether an effect stayed inside its window: x264 rate
+control looks ahead across the whole stream, so a changed segment perturbs its neighbours by ~0.5%
+SSIM even when the pixels are identical.
 
 Tests that touch the database or object storage expect `npm run infra` to be running.

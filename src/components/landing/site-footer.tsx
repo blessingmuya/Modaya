@@ -1,32 +1,46 @@
-import Link from 'next/link';
-import { Wordmark } from '@/components/brand';
+import Link from "next/link";
+import { Wordmark } from "@/components/brand";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-line/70">
-      <div className="container-page py-16">
-        <div className="card flex flex-col items-start justify-between gap-6 p-8 sm:flex-row sm:items-center">
-          <div>
-            <h2 className="text-xl font-semibold text-ink">Bring a clip and a reference.</h2>
-            <p className="mt-2 max-w-md text-[14.5px] text-muted">
-              Create an account, make a project, and render your first cut in a couple of minutes.
+    <footer className="pb-14">
+      <div className="container-page">
+        {/* Closing CTA gets the one dark surface on the page, so the eye lands on it. */}
+        <div className="relative overflow-hidden rounded-[24px] bg-base-950 px-8 py-11 text-center shadow-[var(--shadow-lift)] sm:px-12">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-70"
+            style={{
+              backgroundImage:
+                "radial-gradient(40% 70% at 20% 0%, rgba(45,212,176,0.28) 0%, rgba(10,14,26,0) 70%), radial-gradient(40% 70% at 85% 100%, rgba(129,140,248,0.22) 0%, rgba(10,14,26,0) 70%)",
+            }}
+          />
+          <div className="relative">
+            <h2 className="mx-auto max-w-2xl text-2xl font-semibold tracking-[-0.02em] text-white sm:text-[2rem]">
+              Bring a clip and a reference.
+            </h2>
+            <p className="mx-auto mt-3 max-w-md text-[14.5px] leading-relaxed text-white/60">
+              Create an account, make a project, and render your first cut in a
+              couple of minutes.
             </p>
+            <Link href="/signup" className="btn btn-primary mt-7">
+              Create your first project
+            </Link>
           </div>
-          <Link href="/signup" className="btn btn-primary">
-            Create your first project
-          </Link>
         </div>
 
-        <div className="mt-10 flex flex-col items-start justify-between gap-4 text-[13px] text-faint sm:flex-row sm:items-center">
+        <div className="mt-10 flex flex-col items-center justify-between gap-4 text-[13px] text-faint sm:flex-row">
           <div className="flex items-center gap-4">
             <Wordmark />
-            <span className="hidden sm:inline">Real exports. Honest measurements.</span>
+            <span className="hidden sm:inline">
+              Real exports. Honest measurements.
+            </span>
           </div>
           <div className="flex items-center gap-6">
-            <Link href="/login" className="hover:text-ink-soft">
+            <Link href="/login" className="nav-link">
               Sign in
             </Link>
-            <Link href="/signup" className="hover:text-ink-soft">
+            <Link href="/signup" className="nav-link">
               Create account
             </Link>
           </div>

@@ -1,17 +1,20 @@
-import Link from 'next/link';
-import { desc, eq } from 'drizzle-orm';
-import { requireUser } from '@/lib/auth/session';
-import { getDb } from '@/lib/db/client';
-import { projects } from '@/lib/db/schema';
-import { Wordmark } from '@/components/brand';
-import { NewProjectForm, SignOutButton } from '@/components/dashboard/project-actions';
-import { getStorageHealth } from '@/lib/storage/health';
+import Link from "next/link";
+import { desc, eq } from "drizzle-orm";
+import { requireUser } from "@/lib/auth/session";
+import { getDb } from "@/lib/db/client";
+import { projects } from "@/lib/db/schema";
+import { AppHeader } from "@/components/app-header";
+import {
+  NewProjectForm,
+  SignOutButton,
+} from "@/components/dashboard/project-actions";
+import { getStorageHealth } from "@/lib/storage/health";
 
-export const metadata = { title: 'Projects — Modaya' };
-export const dynamic = 'force-dynamic';
+export const metadata = { title: "Projects — Modaya" };
+export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
-  const user = await requireUser('/dashboard');
+  const user = await requireUser("/dashboard");
   const rows = await getDb()
     .select()
     .from(projects)
@@ -21,24 +24,23 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen">
-      <header className="border-b border-line/70">
-        <div className="container-page flex h-16 items-center justify-between">
-          <Wordmark href="/dashboard" />
-          <div className="flex items-center gap-4">
-            <span className="hidden text-[13px] text-muted sm:inline">{user.email}</span>
-            <SignOutButton />
-          </div>
-        </div>
-      </header>
+      <AppHeader>
+        <span className="hidden text-[13px] text-muted sm:inline">
+          {user.email}
+        </span>
+        <SignOutButton />
+      </AppHeader>
 
       <main className="container-page py-12">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-ink">Projects</h1>
+            <h1 className="text-2xl font-semibold tracking-tight text-ink">
+              Projects
+            </h1>
             <p className="mt-2 text-[14.5px] text-muted">
               {rows.length === 0
-                ? 'No projects yet. Create one to get a studio.'
-                : `${rows.length} project${rows.length === 1 ? '' : 's'}, newest first.`}
+                ? "No projects yet. Create one to get a studio."
+                : `${rows.length} project${rows.length === 1 ? "" : "s"}, newest first.`}
             </p>
           </div>
           <NewProjectForm />
@@ -47,10 +49,13 @@ export default async function DashboardPage() {
         <div className="mt-10">
           {rows.length === 0 ? (
             <div className="card flex flex-col items-start gap-3 p-10">
-              <h2 className="text-[15px] font-medium text-ink">Nothing here yet</h2>
+              <h2 className="text-[15px] font-medium text-ink">
+                Nothing here yet
+              </h2>
               <p className="max-w-lg text-[14px] leading-relaxed text-muted">
-                A project is a container for footage, an optional reference video, a timeline spec
-                and the exports rendered from it. Create one and you will land in its studio.
+                A project is a container for footage, an optional reference
+                video, a timeline spec and the exports rendered from it. Create
+                one and you will land in its studio.
               </p>
             </div>
           ) : (
@@ -71,9 +76,10 @@ export default async function DashboardPage() {
                     </div>
                     <div className="flex shrink-0 items-center gap-6 text-[12.5px] text-muted">
                       <span className="hidden sm:inline">
-                        created {new Date(project.createdAt).toLocaleDateString()}
+                        created{" "}
+                        {new Date(project.createdAt).toLocaleDateString()}
                       </span>
-                      <span className="text-mint-400">Open studio →</span>
+                      <span className="text-mint-600">Open studio →</span>
                     </div>
                   </Link>
                 </li>
@@ -87,8 +93,9 @@ export default async function DashboardPage() {
             Infrastructure
           </h2>
           <p className="mt-2 max-w-2xl text-[13.5px] text-muted">
-            Modaya stores data in Postgres and media in S3-compatible object storage. These are live
-            checks against the configured services, not a mock.
+            Modaya stores data in Postgres and media in S3-compatible object
+            storage. These are live checks against the configured services, not
+            a mock.
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <HealthCard
@@ -108,17 +115,27 @@ export default async function DashboardPage() {
   );
 }
 
-function HealthCard({ title, ok, detail }: { title: string; ok: boolean; detail: string }) {
+function HealthCard({
+  title,
+  ok,
+  detail,
+}: {
+  title: string;
+  ok: boolean;
+  detail: string;
+}) {
   return (
     <div className="card p-4">
       <div className="flex items-center gap-2.5">
         <span
-          className={`h-2 w-2 rounded-full ${ok ? 'bg-mint-400' : 'bg-danger-400'}`}
+          className={`h-2 w-2 rounded-full ${ok ? "bg-mint-400" : "bg-danger-400"}`}
           aria-hidden
         />
         <span className="text-[14px] font-medium text-ink">{title}</span>
-        <span className={`ml-auto text-[11.5px] ${ok ? 'text-mint-300' : 'text-danger-400'}`}>
-          {ok ? 'connected' : 'unreachable'}
+        <span
+          className={`ml-auto text-[11.5px] ${ok ? "text-mint-600" : "text-danger-400"}`}
+        >
+          {ok ? "connected" : "unreachable"}
         </span>
       </div>
       <p className="mono mt-2.5 text-[11.5px] break-all text-faint">{detail}</p>
