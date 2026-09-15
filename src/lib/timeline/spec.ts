@@ -12,9 +12,41 @@ export type Clip = {
   outSec: number;
 };
 
+/**
+ * Colour correction, expressed with the parameters ffmpeg's `eq` filter takes,
+ * so what the UI shows is what the renderer applies.
+ */
+export type Grade = {
+  brightness?: number;
+  contrast?: number;
+  saturation?: number;
+  gamma?: number;
+};
+
+export type PunchIn = {
+  id: string;
+  /** Output-time window the zoom applies to. */
+  startSec: number;
+  endSec: number;
+  /** 1 = unchanged, 1.3 = 30% tighter framing. */
+  scale: number;
+};
+
+export type Caption = {
+  id: string;
+  /** Output-time window the caption is visible for. */
+  startSec: number;
+  endSec: number;
+  text: string;
+  position: 'top' | 'center' | 'bottom';
+};
+
 export type TimelineSpec = {
   version: 1;
   clips: Clip[];
+  grade?: Grade;
+  punchIns?: PunchIn[];
+  captions?: Caption[];
 };
 
 export const MIN_CLIP_SEC = 0.05;
@@ -42,8 +74,20 @@ export function normalizeClips(clips: Clip[]): Clip[] {
     .filter((clip) => clipDuration(clip) >= MIN_CLIP_SEC);
 }
 
-export function createSpec(clips: Clip[]): TimelineSpec {
-  return { version: 1, clips: normalizeClips(clips) };
+export function createSpec(clips: Clip[], extra: Partial<TimelineSpec> = {}): TimelineSpec {
+  return {
+    version: 1,
+    clips: normalizeClips(clips),
+    ...(extra.grade ? { grade: extra.grade } : {}),
+    ...(extra.punchIns?.length ? { punchIns: extra.punchIns } : {}),
+    ...(extra.captions?.length ? { captions: extra.captions } : {}),
+  };
+}
+
+export const DEFAULT_POSITION: Caption['position'] = 'bottom';
+
+export function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
 }
 
 /**
