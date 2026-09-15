@@ -1,0 +1,362 @@
+@import 'tailwindcss';
+
+/**
+ * Modaya design tokens.
+ *
+ * Single source of truth for the visual direction: a near-black canvas, one
+ * saturated accent, a geometric grotesque for headlines with an italic serif
+ * carrying the second line, and soft floating surfaces.
+ *
+ * Components reference semantic classes (bg-surface, text-muted, text-accent) or
+ * role-named tokens, never raw hex — which is what makes a theme change a change
+ * in this file. The accent is described by ROLE (`accent`, `accent-strong`,
+ * `accent-soft`, `accent-on`) rather than by shade, so the same component markup
+ * works whatever the canvas is doing.
+ */
+@theme {
+  /* Canvas — the page itself. */
+  --color-canvas: #0a0a0c;
+  --color-canvas-2: #101014;
+
+  /* Surfaces. `surface` is cards; the numbered steps are insets inside a card. */
+  --color-surface: #131317;
+  --color-surface-2: #1a1a20;
+  --color-surface-3: #24242c;
+
+  /* Deepest ink in the system: the darkest surface, and the colour of text that
+     sits on an accent fill. */
+  --color-base-950: #08080a;
+  --color-base-900: #17171c;
+
+  /* Hairlines */
+  --color-line: #26262e;
+  --color-line-strong: #3a3a45;
+
+  /* Text tiers. Three, with measurable separation between them. */
+  --color-ink: #f4f4f6;
+  --color-ink-soft: #c9c9d2;
+  --color-muted: #9a9aa6;
+  --color-faint: #7f7f8a;
+
+  /* Accent, by role. Fills use `accent`; text uses `accent-strong`, which is
+     light enough to read on the dark canvas; `accent-soft` is the tinted chip
+     background; `accent-on` is text placed on an accent fill. */
+  --color-accent: #2dd4b0;
+  --color-accent-strong: #7ceacd;
+  --color-accent-soft: #10261f;
+  --color-accent-on: #04231b;
+  --color-accent-dim: #1c9c81;
+
+  /* Kept as literal mint steps too, for the logo mark and decorative fills. */
+  --color-mint-400: #2dd4b0;
+  --color-mint-500: #16b394;
+
+  /* Semantic, by role. */
+  --color-warn-text: #e8c07a;
+  --color-warn-soft: #2a2114;
+  --color-danger-text: #f09a95;
+  --color-danger-soft: #2b1615;
+
+  --radius-card: 20px;
+  --radius-pill: 999px;
+
+  /* Soft, diffuse shadows. Floating surfaces need depth without a hard edge. */
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 30px -14px rgb(0 0 0 / 0.7);
+  --shadow-float: 0 2px 6px rgb(0 0 0 / 0.45), 0 22px 48px -20px rgb(0 0 0 / 0.8);
+  --shadow-lift: 0 6px 14px rgb(0 0 0 / 0.5), 0 44px 80px -30px rgb(0 0 0 / 0.85);
+  --shadow-pill: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 26px -12px rgb(0 0 0 / 0.7);
+  /* The tilted hero cards sit on this. */
+  --shadow-card-lift: 0 2px 10px rgb(0 0 0 / 0.5), 0 40px 70px -22px rgb(0 0 0 / 0.9);
+
+  --font-sans:
+    'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* Display serif, used only for the italic line in a headline. Self-hosted
+     through @fontsource: the page must not depend on a font CDN at runtime. */
+  --font-display: 'Instrument Serif', ui-serif, Georgia, 'Times New Roman', serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-accent-on);
+  }
+  a {
+    color: inherit;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .container-page {
+    width: 100%;
+    max-width: 1140px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.6rem 1.1rem;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease,
+      color 0.15s ease,
+      box-shadow 0.15s ease,
+      opacity 0.15s ease;
+    text-decoration: none;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  /* Highest-contrast pill. Inverts with the theme: dark-on-light here, and
+     light-on-dark, so "solid" always means "maximum contrast". */
+  .btn-solid {
+    background: var(--color-ink);
+    color: var(--color-canvas);
+    font-weight: 600;
+  }
+  .btn-solid:hover:not(:disabled) {
+    background: var(--color-ink-soft);
+  }
+  .btn-primary {
+    background: var(--color-accent);
+    color: var(--color-accent-on);
+    font-weight: 600;
+    box-shadow: var(--shadow-pill);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--color-accent-strong);
+  }
+  .btn-secondary {
+    background: var(--color-surface-2);
+    border-color: var(--color-line-strong);
+    color: var(--color-ink);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background: var(--color-surface-3);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--color-ink-soft);
+    border-color: var(--color-line);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    color: var(--color-ink);
+    background: var(--color-surface);
+    border-color: var(--color-line-strong);
+  }
+  .btn-sm {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.8125rem;
+  }
+
+  /* Forms */
+  .input {
+    width: 100%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line-strong);
+    border-radius: 12px;
+    padding: 0.65rem 0.85rem;
+    color: var(--color-ink);
+    font-size: 0.9375rem;
+  }
+  .input::placeholder {
+    color: var(--color-faint);
+  }
+  .input:focus {
+    border-color: var(--color-accent-dim);
+    outline: none;
+    box-shadow: 0 0 0 3px rgb(45 212 176 / 0.16);
+  }
+  .label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-ink-soft);
+    margin-bottom: 0.4rem;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid var(--color-line-strong);
+    background: var(--color-surface-2);
+    border-radius: var(--radius-pill);
+    padding: 0.3rem 0.7rem;
+    font-size: 0.75rem;
+    color: var(--color-ink-soft);
+  }
+  .chip-measured {
+    border-color: rgb(45 212 176 / 0.3);
+    background: var(--color-accent-soft);
+    color: var(--color-accent-strong);
+  }
+  .chip-described {
+    border-color: rgb(232 192 122 / 0.28);
+    background: var(--color-warn-soft);
+    color: var(--color-warn-text);
+  }
+
+  /* ------------------------------------------------------------- navigation */
+
+  /* Floating frosted pill, centred in the header. */
+  .nav-shell {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-line);
+    background: rgb(26 26 32 / 0.72);
+    backdrop-filter: blur(16px) saturate(1.4);
+    box-shadow: var(--shadow-pill);
+  }
+  .nav-link {
+    border-radius: var(--radius-pill);
+    padding: 0.45rem 0.9rem;
+    font-size: 0.8125rem;
+    color: var(--color-muted);
+    text-decoration: none;
+    transition:
+      color 0.15s ease,
+      background-color 0.15s ease;
+  }
+  .nav-link:hover {
+    color: var(--color-ink);
+  }
+  /* Set by the scroll-spy, so the highlight reflects where you actually are. */
+  .nav-link-active {
+    color: var(--color-ink);
+    background: rgb(36 36 44 / 0.9);
+  }
+
+  .hairline {
+    border-top: 1px solid var(--color-line);
+  }
+  .mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ------------------------------------------------------------ typography */
+
+  /* The second line of a headline: a real drawn serif italic, set larger than the
+     sans line it follows, the way the reference does it. */
+  .display-accent {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: -0.005em;
+  }
+
+  /* ------------------------------------------------------------- atmosphere */
+
+  /* Soft vertical falloff from the top of the page. Decorative only. */
+  .atmosphere {
+    background-image: radial-gradient(
+      62% 42% at 50% 0%,
+      rgb(45 212 176 / 0.14) 0%,
+      rgb(10 10 12 / 0) 72%
+    );
+  }
+
+  /* Faint dotted field. Decorative only. */
+  .grid-dots {
+    background-image: radial-gradient(rgb(255 255 255 / 0.09) 1px, transparent 1px);
+    background-size: 26px 26px;
+  }
+
+  /* Film grain, as a tiny inline SVG so there is no extra request. */
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
+
+  /* A floating panel. Depth without a hard border. */
+  .float-card {
+    background: rgb(26 26 32 / 0.92);
+    border: 1px solid var(--color-line-strong);
+    border-radius: 16px;
+    box-shadow: var(--shadow-float);
+    backdrop-filter: blur(12px);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+.animate-pulse-soft {
+  animation: pulse-soft 1.6s ease-in-out infinite;
+}
+
+/* Floating decorative panels drift very slightly. Suppressed for anyone who has
+   asked for reduced motion. */
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+.animate-drift {
+  animation: drift 9s ease-in-out infinite;
+}
+.animate-drift-slow {
+  animation: drift 13s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-drift,
+  .animate-drift-slow,
+  .animate-pulse-soft {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
