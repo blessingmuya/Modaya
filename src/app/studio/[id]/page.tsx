@@ -1,10 +1,16 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
+import { desc, eq } from "drizzle-orm";
 import { Logo } from "@/components/ui";
+import { db } from "@/db";
+import { editPlans } from "@/db/schema";
 import { getCurrentUser } from "@/lib/auth";
 import { getOwnedProject } from "@/app/actions/projects";
 import { getAssets, getJobs, getTimeline } from "@/lib/project";
-import StudioClient from "@/components/StudioClient";
+import { getReferenceProfile } from "@/lib/footage";
+import Studio from "@/components/studio/Studio";
+import type { OpResult } from "@/components/studio/types";
+import type { Marker } from "@/lib/markers";
 
 export const dynamic = "force-dynamic";
 
@@ -16,11 +22,17 @@ export default async function StudioPage({ params }: { params: Promise<{ id: str
   const project = await getOwnedProject(id);
   if (!project) notFound();
 
-  const [assets, timeline, jobs] = await Promise.all([
+  const [assets, timeline, jobs, profile, planRows] = await Promise.all([
     getAssets(id),
     getTimeline(id),
     getJobs(id, 5),
+    getReferenceProfile(id),
+    db.select().from(editPlans).where(eq(editPlans.projectId, id)).orderBy(desc(editPlans.createdAt)).limit(1),
   ]);
+
+  const plan = planRows[0]
+    ? { results: planRows[0].results as unknown as OpResult[], markers: planRows[0].markers as unknown as Marker[] }
+    : null;
 
   return (
     <main className="min-h-screen">
@@ -31,31 +43,21 @@ export default async function StudioPage({ params }: { params: Promise<{ id: str
             <span className="text-muted">/</span>
             <span className="text-sm">{project.name}</span>
           </div>
-          <Link href="/dashboard" className="btn-ghost text-sm">
-            Dashboard
-          </Link>
+          <Link href="/dashboard" className="btn-ghost text-sm">Dashboard</Link>
         </div>
       </header>
 
-      <StudioClient
+      <Studio
         projectId={id}
+        projectName={project.name}
         initialAssets={assets.map((a) => ({
-          id: a.id,
-          role: a.role,
-          filename: a.filename,
-          durationSec: a.durationSec,
-          width: a.width,
-          height: a.height,
-          fps: a.fps,
-          bytes: a.bytes,
+          id: a.id, role: a.role, filename: a.filename, durationSec: a.durationSec,
+          width: a.width, height: a.height, fps: a.fps, bytes: a.bytes,
         }))}
         initialTimeline={timeline}
-        initialJobs={jobs.map((j) => ({
-          id: j.id,
-          status: j.status,
-          error: j.error,
-          createdAt: String(j.createdAt),
-        }))}
+        initialJobs={jobs.map((j) => ({ id: j.id, status: j.status, error: j.error, createdAt: String(j.createdAt) }))}
+        initialProfile={profile}
+        initialPlan={plan}
       />
     </main>
   );

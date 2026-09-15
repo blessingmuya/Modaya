@@ -105,3 +105,18 @@ export const styleProfiles = pgTable(
   },
   (t) => [index("style_project_idx").on(t.projectId)],
 );
+
+export const editPlans = pgTable(
+  "edit_plans",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    projectId: uuid("project_id")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    results: jsonb("results").notNull(),
+    markers: jsonb("markers").notNull().default([]),
+    origin: text("origin").notNull().default("reference"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("plans_project_idx").on(t.projectId)],
+);

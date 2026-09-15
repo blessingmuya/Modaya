@@ -65,3 +65,13 @@ CREATE TABLE IF NOT EXISTS style_profiles (
 );
 CREATE INDEX IF NOT EXISTS style_project_idx ON style_profiles(project_id);
 CREATE UNIQUE INDEX IF NOT EXISTS style_asset_uidx ON style_profiles(asset_id);
+
+CREATE TABLE IF NOT EXISTS edit_plans (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id uuid NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  results jsonb NOT NULL,
+  markers jsonb NOT NULL DEFAULT '[]'::jsonb,
+  origin text NOT NULL DEFAULT 'reference',
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS plans_project_idx ON edit_plans(project_id);
