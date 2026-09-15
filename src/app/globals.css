@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@theme {
+  /* Modaya design tokens — dark base, mint accent */
+  --color-base: #0b0c11;
+  --color-surface: #12141b;
+  --color-surface-2: #181b24;
+  --color-line: #232733;
+  --color-mint: #6ee7c9;
+  --color-mint-dim: #3fbfa2;
+  --color-ink: #e8ebf2;
+  --color-muted: #8a93a6;
+  --color-danger: #ff6b6b;
+  --color-warn: #f5c86b;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --radius-card: 16px;
+}
+
+html,
+body {
+  font-family: var(--font-sans);
+  background: var(--color-base);
+  color: var(--color-ink);
+}
+
+::selection {
+  background: var(--color-mint);
+  color: #06261f;
+}
+
+@utility card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+}
+
+@utility btn-mint {
+  background: var(--color-mint);
+  color: #06261f;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 0.625rem 1.1rem;
+  transition: filter 0.15s ease;
+}
+@utility btn-ghost {
+  border: 1px solid var(--color-line);
+  color: var(--color-ink);
+  border-radius: 10px;
+  padding: 0.625rem 1.1rem;
+  transition: border-color 0.15s ease;
+}
+
+.btn-mint:hover {
+  filter: brightness(1.08);
+}
+.btn-ghost:hover {
+  border-color: var(--color-mint-dim);
+}
+
+@utility input-dark {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  padding: 0.625rem 0.85rem;
+  color: var(--color-ink);
+  width: 100%;
+  outline: none;
+}
+.input-dark:focus {
+  border-color: var(--color-mint-dim);
+}
+
+.glow {
+  background: radial-gradient(
+    60% 60% at 50% 0%,
+    rgba(110, 231, 201, 0.16) 0%,
+    rgba(11, 12, 17, 0) 70%
+  );
+}
